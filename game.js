@@ -129,11 +129,13 @@ function Game1Sock() {
         if (magsqr == 0) {
             return;
         }
-        delta.x /= magsqr;
-        delta.y /= magsqr;
-        if (delta.x > 0) {
+        if (delta.x > 0 && this.sprite.scale.x > 0) {
+            this.sprite.scale.x *= -1;
+        } else if (delta.x < 0 && this.sprite.scale.x < 0) {
             this.sprite.scale.x *= -1;
         }
+        delta.x /= magsqr;
+        delta.y /= magsqr;
         this.sprite.position.x += delta.x;
         this.sprite.position.y += delta.y;
     }
