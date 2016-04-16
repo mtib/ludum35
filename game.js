@@ -79,6 +79,7 @@ var cGui = new PIXI.Container();
 const fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
 const debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
 const pointsConfig = {font: "20px monospace", fill: "#FF00FF", align: "right"};
+const infoConfig = {font: "60px Arial", fill: "#000000", align: "center"};
 
 const relcenter = {x:0.5,y:0.5};
 const nKey = keyboard(78);
@@ -101,7 +102,7 @@ const ssock = "./scenes/001/sock.png"; // normal sock, for use in all? scenes
 const s001armo = "./scenes/001/arm.open.png"; // o = open
 const s001armg = "./scenes/001/arm.sock.png"; // g = grabbed
 
-const sceneMusic = [
+const sceneMusic = [ // for the cool kids!
     new Howl({
         src: ['scenes/000/SockventureIntro.ogg'],
         loop: true,
@@ -128,11 +129,10 @@ function Game1Sock() {
     }
     this.move = function() {
         delta = {x:0, y:0};
-        did = false;
-        if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < WIDTH - 70) {
+        if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < WIDTH - 100) {
             delta.x += speed;
         }
-        if ((leftArrow.isDown || aKey.isDown) && this.sprite.position.x > 70) {
+        if ((leftArrow.isDown || aKey.isDown) && this.sprite.position.x > 100) {
             delta.x -= speed;
         }
         if ((upArrow.isDown || wKey.isDown) && this.sprite.position.y > 230) {
@@ -169,6 +169,8 @@ function State() {
     this.debugStateText = new PIXI.Text("0", debugConfig);
     this.debugStateText.position = {x:89,y:45};
 
+    this.infotext = new PIXI.Text("", infotext); // eg. "press xxx to skip"
+
     this.doc = {}; // DestroyOnChange
 
     cGui.addChild(this.debugText);
@@ -204,6 +206,7 @@ function State() {
     this.substate = 0;
     this.introfunc = function(){
         if (this.switched){
+            this.infotext.text = "Press <Enter> to skip"
             this.substate = 1;
             this.doc["s000bed1"] = PIXI.Sprite.fromImage(s000bed1);
             this.doc["s000bed2"] = PIXI.Sprite.fromImage(s000bed2);
@@ -233,6 +236,7 @@ function State() {
     this.switched = true;
     this.underTheBed = function(){
         if (this.switched) {
+            this.infotext = "[WASD] to move"
             this.starttime = Date.now()
             this.doc["points"] = this.score;
             this.doc["s001bg"] = PIXI.Sprite.fromImage(s001bg);
@@ -244,6 +248,8 @@ function State() {
             cBack.addChild(this.doc["s001bg"]);
             cGui.addChild(this.doc["points"]);
             this.doc["gamesock"] = new Game1Sock();
+
+            window.setTimeout(function(){this.infotext.text = ""}, 4000);
 
             this.switched = false;
         }
