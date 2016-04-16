@@ -82,7 +82,6 @@ const pointsConfig = {font: "20px monospace", fill: "#FF00FF", align: "right"};
 const infoConfig = {font: "60px Arial", fill: "#000000", align: "center"};
 
 const relcenter = {x:0.5,y:0.5};
-const nKey = keyboard(78);
 const enterKey = keyboard(13);
 
 const leftArrow = keyboard(37);
@@ -97,6 +96,7 @@ const sKey = keyboard(83);
 
 const s000bed1 = "./scenes/000/bed.pic1.jpg";
 const s000bed2 = "./scenes/000/bed.pic2.jpg";
+const s000bed3 = "./scenes/000/bed.pic3.jpg";
 const s001bg = "./scenes/001/background.jpg"; // background for game #1
 const ssock = "./scenes/001/sock.png"; // normal sock, for use in all? scenes
 const s001armo = "./scenes/001/arm.open.png"; // o = open
@@ -156,7 +156,6 @@ function Game1Sock() {
         this.sprite.position.y += delta.y;
     }
     cMiddle.addChild(this.sprite);
-    console.log("stuff should happen");
 }
 
 function State() {
@@ -193,6 +192,7 @@ function State() {
                     cBack.removeChild(this.doc[sprite]);
                 }
             }
+            delete this.doc[sprite];
         }
         enterKey.press = undefined;
 
@@ -203,29 +203,31 @@ function State() {
         this.debugStateText.text = this.number;
         this.run = this.funcarray[this.number];
     }
-    this.substate = 0;
     this.introfunc = function(){
         if (this.switched){
             this.infotext.text = "Press <Enter> to skip"
             this.substate = 1;
+            this.doc["pic"] = 1;
             this.doc["s000bed1"] = PIXI.Sprite.fromImage(s000bed1);
             this.doc["s000bed2"] = PIXI.Sprite.fromImage(s000bed2);
+            this.doc["s000bed3"] = PIXI.Sprite.fromImage(s000bed3);
 
             this.doc["s000bed1"].width = WIDTH;
             this.doc["s000bed1"].height = HEIGHT;
             this.doc["s000bed2"].width = WIDTH;
             this.doc["s000bed2"].height = HEIGHT;
+            this.doc["s000bed3"].width = WIDTH;
+            this.doc["s000bed3"].height = HEIGHT;
 
             cBack.addChild(this.doc["s000bed1"]);
 
             enterKey.press = function(){
-                console.log(self.number, self.substate);
                 if (self.number === 0){
-                    if (self.substate == 2){
+                    if (self.doc["pic"] == 3){
                         self.nextState();
                     }else{
-                        cBack.removeChild(self.doc["s000bed"+self.substate++]);
-                        cBack.addChild(self.doc["s000bed"+self.substate]);
+                        cBack.removeChild(self.doc["s000bed"+self.doc["pic"]++]);
+                        cBack.addChild(self.doc["s000bed"+self.doc["pic"]]);
                     }
                 }
             }
