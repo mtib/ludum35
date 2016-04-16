@@ -71,7 +71,27 @@ var stage = new PIXI.Container();
 // Config goes here:
 var fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
 var relcenter = (0.5,0.5);
-var currentmode = 1;
+
+function State() {
+    self = this;
+    this.number = 0;
+    this.run = function(){
+        console.log("default state");
+    }
+
+    this.nextState = function(){
+        this.number += 1;
+        this.run = this.funcarray[this.number];
+    }
+    this.introfunc = function(){
+        console.log("intro func");
+    }
+    this.funcarray = [this.introfunc];
+
+    this.run = this.funcarray[this.number];
+}
+
+var gamestate = new State();
 
 // Layers
 var cBack = new PIXI.Container();
@@ -110,13 +130,8 @@ function renderStage(){
 
 // Called before rendering
 function gameLoop(){
-    switch (currentmode) {
-        case 1: // Show Intro
-
-            break;
-        default:
-
-    }
+    gamestate.run()
+    // after doing logic:
 }
 
 // start game
