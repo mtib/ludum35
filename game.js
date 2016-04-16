@@ -22,7 +22,7 @@ var version = "0.01d"
 // Initialize Renderer
 var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT, {antialiasing: false, transparent: false, resolution: 1});
 renderer.backgroundColor = 0xABC8D2;
-document.getElementById("game").appendChild(renderer.view);
+document.getElementById("gamediv").appendChild(renderer.view);
 
 // Master Containter
 var stage = new PIXI.Container();
