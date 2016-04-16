@@ -21,7 +21,7 @@ var version = "0.01d"
 
 // Initialize Renderer
 var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT, {antialiasing: false, transparent: false, resolution: 1});
-renderer.backgroundColor = 0xABC8D2;
+renderer.backgroundColor = 0xFF00FF;
 document.getElementById("gamediv").appendChild(renderer.view);
 
 // Master Containter
@@ -52,6 +52,13 @@ stage.addChild(cFront);
 stage.addChild(cGui);
 
 
+PIXI.loader
+    .load(setup);
+
+function setup(){
+    // Do setup here
+    renderStage();
+}
 
 // Request Animation Frame
 function renderStage(){
@@ -59,3 +66,6 @@ function renderStage(){
     // renderLoop();
     renderer.render(stage);
 }
+
+// start game
+setup();
