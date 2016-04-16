@@ -168,7 +168,7 @@ function State() {
     this.debugStateText = new PIXI.Text("0", debugConfig);
     this.debugStateText.position = {x:89,y:45};
 
-    this.infotext = new PIXI.Text("", infotext); // eg. "press xxx to skip"
+    this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
 
     this.doc = {}; // DestroyOnChange
 
