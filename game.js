@@ -71,6 +71,7 @@ var stage = new PIXI.Container();
 // Config goes here:
 var fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
 var relcenter = (0.5,0.5);
+var currentmode = 1;
 
 // Layers
 var cBack = new PIXI.Container();
@@ -103,8 +104,19 @@ function setup(){
 // Request Animation Frame
 function renderStage(){
     requestAnimationFrame(renderStage);
-    // renderLoop();
+    gameLoop();
     renderer.render(stage);
+}
+
+// Called before rendering
+function gameLoop(){
+    switch (currentmode) {
+        case 1: // Show Intro
+
+            break;
+        default:
+
+    }
 }
 
 // start game
