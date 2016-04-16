@@ -227,6 +227,7 @@ PIXI.loader
 
 function setup(){
     // Do setup here
+    // Easteregg: eyes!¬
     renderStage();
 }
 
