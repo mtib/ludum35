@@ -61,7 +61,7 @@ const HEIGHT = 720;
 const version = "0.01d"
 
 // Initialize Renderer
-var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT, {antialiasing: false, transparent: false, resolution: 1});
+var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT, {antialiasing: true, transparent: false, resolution: 1});
 renderer.backgroundColor = 0x6ec2cb;
 document.getElementById("gamediv").appendChild(renderer.view);
 
@@ -78,14 +78,68 @@ var cGui = new PIXI.Container();
 // Config goes here:
 const fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
 const debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
-const relcenter = (0.5,0.5);
+const relcenter = {x:0.5,y:0.5};
 const nKey = keyboard(78);
 const enterKey = keyboard(13);
+
+const leftArrow = keyboard(37);
+const upArrow = keyboard(38);
+const rightArrow = keyboard(39);
+const downArrow = keyboard(40);
+
+const aKey = keyboard(65);
+const wKey = keyboard(87);
+const dKey = keyboard(68);
+const sKey = keyboard(83);
 
 const s001bg = "./scenes/001/background.jpg"; // background for game #1
 const ssock = "./scenes/001/sock.png"; // normal sock, for use in all? scenes
 const s001armo = "./scenes/001/arm.open.png"; // o = open
 const s001armg = "./scenes/001/arm.sock.png"; // g = grabbed
+
+
+function Game1Sock() {
+    self = this;
+    size = 128 // Pixel
+    speed = 3 // Pixel / Frame
+    this.sprite = new PIXI.Sprite.fromImage(ssock);
+    this.sprite.anchor = relcenter;
+    this.sprite.width = size;
+    this.sprite.height = size;
+    this.sprite.position = {x: WIDTH*0.5, y: HEIGHT*0.5};
+    this.die = function() {
+        cMiddle.removeChild(this.sprite);
+    }
+    this.move = function() {
+        delta = {x:0, y:0};
+        did = false;
+        if (leftArrow.isDown || aKey.isDown) {
+            delta.x -= speed;
+        }
+        if (rightArrow.isDown || dKey.isDown) {
+            delta.x += speed;
+        }
+        if (upArrow.isDown || wKey.isDown) {
+            delta.y -= speed;
+        }
+        if (downArrow.isDown || sKey.isDown) {
+            delta.y += speed;
+        }
+        magsqr = Math.sqrt(Math.abs(delta.x) + Math.abs(delta.y))
+        if (magsqr == 0) {
+            return;
+        }
+        delta.x /= magsqr;
+        delta.y /= magsqr;
+        if (delta.x > 0) {
+            this.sprite.scale.x *= -1;
+        }
+        this.sprite.position.x += delta.x;
+        this.sprite.position.y += delta.y;
+    }
+    cMiddle.addChild(this.sprite);
+    console.log("stuff should happen");
+}
 
 function State() {
     self = this;
@@ -99,7 +153,6 @@ function State() {
     cGui.addChild(this.debugText);
     cGui.addChild(this.debugStateText);
     this.number = 0;
-    this.sock = PIXI.Sprite.fromImage(ssock);
     this.run = function(){
         console.log("default state");
     }
@@ -107,7 +160,11 @@ function State() {
     this.nextState = function(){
         for (var sprite in this.doc) {
             if (this.doc.hasOwnProperty(sprite)) {
-                cBack.removeChild(this.doc[sprite]);
+                if (this.doc[sprite].die) {
+                    this.doc[sprite].die();
+                } else {
+                    cBack.removeChild(this.doc[sprite]);
+                }
             }
         }
         this.number += 1;
@@ -131,14 +188,17 @@ function State() {
             this.doc["s001bg"].width = WIDTH;
             this.doc["s001bg"].height = HEIGHT;
             cBack.addChild(this.doc["s001bg"]);
-            console.log("Dafuq")
+            this.doc["gamesock"] = new Game1Sock();
+
             this.switched = false;
         }
+        this.doc["gamesock"].move();
     }
     this.funcarray = [this.introfunc, this.underTheBed];
 
     this.run = this.funcarray[this.number];
 }
+
 
 var gamestate = new State();
 
