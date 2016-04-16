@@ -78,6 +78,8 @@ var cGui = new PIXI.Container();
 // Config goes here:
 const fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
 const debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
+const pointsConfig = {font: "20px monospace", fill: "#FF00FF", align: "right"};
+
 const relcenter = {x:0.5,y:0.5};
 const nKey = keyboard(78);
 const enterKey = keyboard(13);
@@ -149,6 +151,9 @@ function State() {
     this.debugText.position = {x:5,y:5};
     this.debugStateText = new PIXI.Text("State: 0", debugConfig);
     this.debugStateText.position = {x:5,y:45};
+    this.score = new PIXI.Text("0", pointsConfig);
+    this.score.position = {x: WIDTH - 5, y: 5};
+    this.score.anchor = {x: 1, y:0};
 
     this.doc = {}; // DestroyOnChange
 
@@ -165,6 +170,9 @@ function State() {
                 if (this.doc[sprite].die) {
                     this.doc[sprite].die();
                 } else {
+                    cGui.removeChild(this.doc[sprite])
+                    cMiddle.removeChild(this.doc[sprite])
+                    cFront.removeChild(this.doc[sprite])
                     cBack.removeChild(this.doc[sprite]);
                 }
             }
@@ -183,6 +191,8 @@ function State() {
     this.switched = true;
     this.underTheBed = function(){
         if (this.switched) {
+            this.starttime = Date.now()
+            this.doc["points"] = this.score;
             this.doc["s001bg"] = PIXI.Sprite.fromImage(s001bg);
             this.doc["s001armo"] = PIXI.Sprite.fromImage(s001armo);
             this.doc["s001armg"] = PIXI.Sprite.fromImage(s001armg);
@@ -190,11 +200,13 @@ function State() {
             this.doc["s001bg"].width = WIDTH;
             this.doc["s001bg"].height = HEIGHT;
             cBack.addChild(this.doc["s001bg"]);
+            cGui.addChild(this.doc["points"]);
             this.doc["gamesock"] = new Game1Sock();
 
             this.switched = false;
         }
         this.doc["gamesock"].move();
+        this.doc["points"].text = Math.floor((Date.now() - this.starttime) / 1000.0);
     }
     this.funcarray = [this.introfunc, this.underTheBed];
 
