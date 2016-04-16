@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#gamediv{
+    width: 1280px;
+    height: 720px;
+    margin: auto auto;
+}
+
+h1 {
+    font-family: monospace;
+    text-align: center;
+}
+
+pre.center {
+    margin: auto auto;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+}

@@ -130,8 +130,10 @@ stage.addChild(cMiddle);
 stage.addChild(cFront);
 stage.addChild(cGui);
 
+const s001bg = "./scenes/001/background.jpg";
 
 PIXI.loader
+    .add(s001bg)
     .load(setup);
 
 function setup(){
