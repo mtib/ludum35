@@ -99,6 +99,18 @@ const ssock = "./scenes/001/sock.png"; // normal sock, for use in all? scenes
 const s001armo = "./scenes/001/arm.open.png"; // o = open
 const s001armg = "./scenes/001/arm.sock.png"; // g = grabbed
 
+const sceneMusic = [
+    new Howl({
+        src: ['scenes/000/SockventureIntro.ogg'],
+        loop: true,
+        volume: 0.4,
+    }),
+    new Howl({
+        src: ['scenes/001/SockventureHand.ogg'],
+        loop: true,
+        volume: 0.4,
+    })
+];
 
 function Game1Sock() {
     self = this;
@@ -157,6 +169,7 @@ function State() {
     cGui.addChild(this.debugText);
     cGui.addChild(this.debugStateText);
     this.number = 0;
+    sceneMusic[0].play();
     this.run = function(){
         console.log("default state");
     }
@@ -171,7 +184,8 @@ function State() {
                 }
             }
         }
-        this.number += 1;
+        sceneMusic[this.number++].stop();
+        sceneMusic[this.number].play();
         this.switched = true;
         this.debugStateText.text = this.number;
         this.run = this.funcarray[this.number];
