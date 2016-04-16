@@ -8,3 +8,5 @@
 - Genetik / Evolution
 - Socken
 - Krankheiten wachsen
+- Kleinere Dinge essen & wachsen
+- Farben ändern und Kollisionen beeinflussen
