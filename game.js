@@ -76,9 +76,9 @@ var cGui = new PIXI.Container();
 
 
 // Config goes here:
-var fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
-var debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
-var relcenter = (0.5,0.5);
+const fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
+const debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
+const relcenter = (0.5,0.5);
 
 function State() {
     self = this;
