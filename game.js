@@ -11,7 +11,6 @@ theme: Shapeshift
 */
 
 /*
-
 STRING OF EVENTS:
 1. Intro Comic (3 Pictures)
     - socks come to life when unattended
@@ -51,6 +50,24 @@ STRING OF EVENTS:
     - attack in turns
 */
 
+/*
+000 - Intro
+001 - Under the bed game
+002 - Story (washing machine)
+003 - Sewerfall game
+004 - Story (Sockbert)
+005 - Snake game
+006 - Story (Explanation)
+007 - Plumbing game
+008 - Story (Break out)
+009 - Doodle Jump
+010 - Story (Getting grabbed)
+011 - Boss fight
+012 - Thanks for playing
+
+
+*/
+
 // Cheat Sheet: https://github.com/mtib/ludum34/blob/master/game.js
 
 // Canvas Size
@@ -79,7 +96,7 @@ var cGui = new PIXI.Container();
 const fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
 const debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
 const pointsConfig = {font: "20px monospace", fill: "#FF00FF", align: "right"};
-const infoConfig = {font: "60px Arial", fill: "#000000", align: "center"};
+const infoConfig = {font: "60px Arial", fill: "#FFFFFF", align: "center", dropShadow: true, dropShadowColor: "#000000"};
 
 const relcenter = {x:0.5,y:0.5};
 const enterKey = keyboard(13);
@@ -169,9 +186,12 @@ function State() {
     this.debugStateText.position = {x:89,y:45};
 
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
+    this.infotext.position = {x: WIDTH/2, y: HEIGHT/2};
+    this.infotext.anchor = relcenter;
 
     this.doc = {}; // DestroyOnChange
 
+    cGui.addChild(this.infotext);
     cGui.addChild(this.debugText);
     cGui.addChild(this.debugStateText);
     this.number = 0;
