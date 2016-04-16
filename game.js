@@ -60,12 +60,10 @@ STRING OF EVENTS:
 006 - Story (Explanation)
 007 - Plumbing game
 008 - Story (Break out)
-009 - Doodle Jump
+009 - Sewer Jump
 010 - Story (Getting grabbed)
 011 - Boss fight
 012 - Thanks for playing
-
-
 */
 
 // Cheat Sheet: https://github.com/mtib/ludum34/blob/master/game.js
@@ -175,6 +173,30 @@ function Game1Sock() {
     cMiddle.addChild(this.sprite);
 }
 
+function Game1Hand(position) {
+    this.sopen = new PIXI.Sprite.fromImage(s001armo);
+    this.sgrab = new PIXI.Sprite.fromImage(s001armg);
+
+    this.sopen.position = position;
+    this.sopen.rotation = Math.atan((this.sopen.position.y - gamestate.playerpos().y)/(this.sopen.position.x - gamestate.playerpos().x) );
+
+    this.grab = function() {
+        this.sgrab.position = this.sopen.position;
+        this.sgrab.anchor = this.sopen.anchor;
+        this.sgrab.size = this.sopen.size;
+        this.sgrab.rotation = this.sopen.rotation;
+        cFront.removeChild(this.sopen);
+        cFront.addChild(this.sgrab);
+    }
+    this.release = function() {
+        // shouldnt be needed...
+    }
+    this.logic = function() {
+        // TODO move
+    }
+    cFront.addChild(this.sopen);
+}
+
 function State() {
     self = this;
     this.debugText = new PIXI.Text("Version: "+version+"\n<Debug Information>\nState: ",debugConfig);
@@ -190,11 +212,20 @@ function State() {
     this.infotext.anchor = relcenter;
 
     this.doc = {}; // DestroyOnChange
+    this.number = 0;
+
+    this.playerpos = function() {
+        switch (this.number) {
+            case 1:
+                return this.doc["gamesock"].sprite.position;
+        }
+        return {x: -31415, y:-1337};
+    }
 
     cGui.addChild(this.infotext);
     cGui.addChild(this.debugText);
     cGui.addChild(this.debugStateText);
-    this.number = 0;
+
     sceneMusic[0].play();
     this.run = function(){
         console.log("default state");
@@ -258,8 +289,8 @@ function State() {
     this.switched = true;
     this.underTheBed = function(){
         if (this.switched) {
-            this.infotext = "[WASD] to move"
-            this.starttime = Date.now()
+            this.infotext.text = "[WASD] to move";
+            this.starttime = Date.now();
             this.doc["points"] = this.score;
             this.doc["s001bg"] = PIXI.Sprite.fromImage(s001bg);
             this.doc["s001armo"] = PIXI.Sprite.fromImage(s001armo);
@@ -271,7 +302,31 @@ function State() {
             cGui.addChild(this.doc["points"]);
             this.doc["gamesock"] = new Game1Sock();
 
-            window.setTimeout(function(){this.infotext.text = ""}, 4000);
+            hidetext = function(that){
+                window.setTimeout(function(){that.infotext.text = ""}, 4000);
+            }(this);
+
+            this.spawnHands = window.setInterval(function () {
+                orientation = Math.floor(Math.random() * 4.0);
+                rx = WIDTH * Math.random();
+                ry = HEIGHT * Math.random();
+                pos = {};
+                switch (orientation) {
+                    case 0: // top
+                        pos = {x: rx, y: 0};
+                        break;
+                    case 1: // right
+                        pos = {x: 0, y: ry};
+                        break;
+                    case 2: // bottom
+                        pos = {x: rx, y: HEIGHT};
+                        break;
+                    case 3: // left
+                        pos = {x: 0, y: ry};
+                        break;
+                }
+                this.doc["hand"+Date.now()] = new Game1Hand(pos);
+            }, 800);
 
             this.switched = false;
         }
