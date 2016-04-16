@@ -45,7 +45,8 @@ STRING OF EVENTS:
     6.1. game
         - collect something to gain height
     6.2. more story
-        - grabbed by sock-hand
+        - if won grabbed by sock-hand
+        - else falling = losing health
 7. Boss fight
     - attack in turns
 */
@@ -61,19 +62,29 @@ const version = "0.01d"
 
 // Initialize Renderer
 var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT, {antialiasing: false, transparent: false, resolution: 1});
-renderer.backgroundColor = 0xFF00FF;
+renderer.backgroundColor = 0x6ec2cb;
 document.getElementById("gamediv").appendChild(renderer.view);
 
 // Master Containter
 var stage = new PIXI.Container();
 
+// Layers
+var cBack = new PIXI.Container();
+var cMiddle = new PIXI.Container();
+var cFront = new PIXI.Container();
+var cGui = new PIXI.Container();
+
 
 // Config goes here:
 var fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
+var debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
 var relcenter = (0.5,0.5);
 
 function State() {
     self = this;
+    this.debugText = new PIXI.Text("Version: "+version+"\n<Debug Information>",debugConfig);
+    this.debugText.position = {x:5,y:5};
+    cGui.addChild(this.debugText);
     this.number = 0;
     this.run = function(){
         console.log("default state");
@@ -93,11 +104,6 @@ function State() {
 
 var gamestate = new State();
 
-// Layers
-var cBack = new PIXI.Container();
-var cMiddle = new PIXI.Container();
-var cFront = new PIXI.Container();
-var cGui = new PIXI.Container();
 /*
     stage
       |
