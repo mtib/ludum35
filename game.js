@@ -81,7 +81,6 @@ const debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF00
 const pointsConfig = {font: "20px monospace", fill: "#FF00FF", align: "right"};
 
 const relcenter = {x:0.5,y:0.5};
-const nKey = keyboard(78);
 const enterKey = keyboard(13);
 
 const leftArrow = keyboard(37);
@@ -156,7 +155,6 @@ function Game1Sock() {
         this.sprite.position.y += delta.y;
     }
     cMiddle.addChild(this.sprite);
-    console.log("stuff should happen");
 }
 
 function State() {
@@ -216,7 +214,6 @@ function State() {
             cBack.addChild(this.doc["s000bed1"]);
 
             enterKey.press = function(){
-                console.log(self.number, self.substate);
                 if (self.number === 0){
                     if (self.substate == 2){
                         self.nextState();
