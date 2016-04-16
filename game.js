@@ -189,6 +189,7 @@ function State() {
                     cBack.removeChild(this.doc[sprite]);
                 }
             }
+            delete this.doc[sprite];
         }
         enterKey.press = undefined;
 
