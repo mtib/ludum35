@@ -10,6 +10,46 @@ date: 16.04.2016 for LD35
 theme: Shapeshift
 */
 
+/*
+
+STRING OF EVENTS:
+1. Intro Comic (3 Pictures)
+    - socks come to life when unattended
+2. Under the bed
+    2.1. game
+        - avoid hands
+    2.2. more story
+        - grey sock tells hero to fight sewer monster
+3. Sewerfall
+    3.1. game
+        - falling in the sewer
+        - avoid dirt
+    3.2. reward (grow arms)
+        - if not too dirty
+4. Snake game
+    4.1. game
+        - eat fluff
+    4.2. reward (grow bigger)
+        - if player ate more than 20 fluff in 30 sec.
+5. Plumbing game
+    5.1. game
+        - turn tiles to connect pipes
+    5.2. reward (grow hair)
+        - did it in 15 seconds
+### Optional ###
+0. Platforming game
+    0.1. game
+    0.2. reward (grow wings)
+################
+6. Doodle Jump
+    6.1. game
+        - collect something to gain height
+    6.2. more story
+        - grabbed by sock-hand
+7. Boss fight
+    - attack in turns
+*/
+
 // Cheat Sheet: https://github.com/mtib/ludum34/blob/master/game.js
 
 // Canvas Size
