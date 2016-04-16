@@ -80,6 +80,12 @@ const fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
 const debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
 const relcenter = (0.5,0.5);
 const nKey = keyboard(78);
+const enterKey = keyboard(13);
+
+const s001bg = "./scenes/001/background.jpg"; // background for game #1
+const ssock = "./scenes/001/sock.png"; // normal sock, for use in all? scenes
+const s001armo = "./scenes/001/arm.open.png"; // o = open
+const s001armg = "./scenes/001/arm.sock.png"; // g = grabbed
 
 function State() {
     self = this;
@@ -88,15 +94,24 @@ function State() {
     this.debugStateText = new PIXI.Text("State: 0", debugConfig);
     this.debugStateText.position = {x:5,y:45};
 
+    this.doc = {}; // DestroyOnChange
+
     cGui.addChild(this.debugText);
     cGui.addChild(this.debugStateText);
     this.number = 0;
+    this.sock = PIXI.Sprite.fromImage(ssock);
     this.run = function(){
         console.log("default state");
     }
 
     this.nextState = function(){
+        for (var sprite in this.doc) {
+            if (this.doc.hasOwnProperty(sprite)) {
+                cBack.removeChild(this.doc[sprite]);
+            }
+        }
         this.number += 1;
+        this.switched = true;
         this.debugStateText.text = "State: " + this.number;
         this.run = this.funcarray[this.number];
     }
@@ -106,8 +121,19 @@ function State() {
             this.nextState();
         }
     }
+    this.switched = true;
     this.underTheBed = function(){
-        console.log("scary hand");
+        if (this.switched) {
+            this.doc["s001bg"] = PIXI.Sprite.fromImage(s001bg);
+            this.doc["s001armo"] = PIXI.Sprite.fromImage(s001armo);
+            this.doc["s001armg"] = PIXI.Sprite.fromImage(s001armg);
+
+            this.doc["s001bg"].width = WIDTH;
+            this.doc["s001bg"].height = HEIGHT;
+            cBack.addChild(this.doc["s001bg"]);
+            console.log("Dafuq")
+            this.switched = false;
+        }
     }
     this.funcarray = [this.introfunc, this.underTheBed];
 
@@ -130,10 +156,11 @@ stage.addChild(cMiddle);
 stage.addChild(cFront);
 stage.addChild(cGui);
 
-const s001bg = "./scenes/001/background.jpg";
-
 PIXI.loader
     .add(s001bg)
+    .add(s001armg)
+    .add(s001armo)
+    .add(ssock)
     .load(setup);
 
 function setup(){
@@ -150,8 +177,8 @@ function renderStage(){
 
 // Called before rendering
 function gameLoop(){
-    gamestate.run()
     // after doing logic:
+    gamestate.run()
 }
 
 // start game
