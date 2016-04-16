@@ -113,7 +113,7 @@ function Game1Sock() {
     this.move = function() {
         delta = {x:0, y:0};
         did = false;
-        if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < (WIDTH - 70)) {
+        if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < WIDTH - 70) {
             delta.x += speed;
         }
         if ((leftArrow.isDown || aKey.isDown) && this.sprite.position.x > 70) {
