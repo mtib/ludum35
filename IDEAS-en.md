@@ -1,5 +1,4 @@
 # Ideas
-<<<<<<< HEAD
 - Vampire, Werewolf
 - Metamorphosis
 - Minigames
