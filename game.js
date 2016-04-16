@@ -10,6 +10,8 @@ date: 16.04.2016 for LD35
 theme: Shapeshift
 */
 
+// Cheat Sheet: https://github.com/mtib/ludum34/blob/master/game.js
+
 // Canvas Size
 var WIDTH = 1280;
 var HEIGHT = 720;
