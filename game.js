@@ -13,11 +13,11 @@ theme: Shapeshift
 // Cheat Sheet: https://github.com/mtib/ludum34/blob/master/game.js
 
 // Canvas Size
-var WIDTH = 1280;
-var HEIGHT = 720;
+const WIDTH = 1280;
+const HEIGHT = 720;
 
 // Current version
-var version = "0.01d"
+const version = "0.01d"
 
 // Initialize Renderer
 var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT, {antialiasing: false, transparent: false, resolution: 1});
