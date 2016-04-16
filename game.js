@@ -194,6 +194,11 @@ function Game1Hand(position) {
     this.logic = function() {
         // TODO move
     }
+    this.die = function() {
+        cFront.removeChild(this.sopen);
+        cFront.removeChild(this.sgrab);
+        delete this;
+    }
     cFront.addChild(this.sopen);
 }
 
@@ -257,7 +262,7 @@ function State() {
     diasStateGenerator = function(backgrounds) {
         return function(){
             if (this.switched){
-                this.infotext.text = "Press <Enter> to skip"
+                this.infotext.text = "Press <Enter> to proceed"
                 this.doc["dias"] = 0;
                 for (var bg in backgrounds){
                     this.doc[bg] = PIXI.Sprite.fromImage(backgrounds[bg]);
@@ -302,27 +307,29 @@ function State() {
                 window.setTimeout(function(){that.infotext.text = ""}, 4000);
             }(this);
 
-            this.spawnHands = window.setInterval(function () {
-                orientation = Math.floor(Math.random() * 4.0);
-                rx = WIDTH * Math.random();
-                ry = HEIGHT * Math.random();
-                pos = {};
-                switch (orientation) {
-                    case 0: // top
-                        pos = {x: rx, y: 0};
-                        break;
-                    case 1: // right
-                        pos = {x: 0, y: ry};
-                        break;
-                    case 2: // bottom
-                        pos = {x: rx, y: HEIGHT};
-                        break;
-                    case 3: // left
-                        pos = {x: 0, y: ry};
-                        break;
-                }
-                this.doc["hand"+Date.now()] = new Game1Hand(pos);
-            }, 800);
+            this.spawnHands = function(self) {
+                window.setTimeout(function () {
+                    orientation = Math.floor(Math.random() * 4.0);
+                    rx = WIDTH * Math.random();
+                    ry = HEIGHT * Math.random();
+                    pos = {};
+                    switch (orientation) {
+                        case 0: // top
+                            pos = {x: rx, y: 0};
+                            break;
+                        case 1: // right
+                            pos = {x: 0, y: ry};
+                            break;
+                        case 2: // bottom
+                            pos = {x: rx, y: HEIGHT};
+                            break;
+                        case 3: // left
+                            pos = {x: 0, y: ry};
+                            break;
+                    }
+                    self.doc[Date.now()] = new Game1Hand(pos);
+                }, 1200);
+            }(this);
 
             this.switched = false;
         }
