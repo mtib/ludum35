@@ -229,7 +229,6 @@ function State() {
                 this.infotext.text = "Press <Enter> to skip"
                 this.doc["dias"] = 0;
                 for (var bg in backgrounds){
-                    console.log(bg);
                     this.doc[bg] = PIXI.Sprite.fromImage(backgrounds[bg]);
                     this.doc[bg].width  = WIDTH;
                     this.doc[bg].height = HEIGHT;
