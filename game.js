@@ -92,6 +92,8 @@ const wKey = keyboard(87);
 const dKey = keyboard(68);
 const sKey = keyboard(83);
 
+const s000bed1 = "./scenes/000/bed.pic1.jpg";
+const s000bed2 = "./scenes/000/bed.pic2.jpg";
 const s001bg = "./scenes/001/background.jpg"; // background for game #1
 const ssock = "./scenes/001/sock.png"; // normal sock, for use in all? scenes
 const s001armo = "./scenes/001/arm.open.png"; // o = open
@@ -145,10 +147,10 @@ function Game1Sock() {
 
 function State() {
     self = this;
-    this.debugText = new PIXI.Text("Version: "+version+"\n<Debug Information>",debugConfig);
+    this.debugText = new PIXI.Text("Version: "+version+"\n<Debug Information>\nState: ",debugConfig);
     this.debugText.position = {x:5,y:5};
-    this.debugStateText = new PIXI.Text("State: 0", debugConfig);
-    this.debugStateText.position = {x:5,y:45};
+    this.debugStateText = new PIXI.Text("0", debugConfig);
+    this.debugStateText.position = {x:89,y:45};
 
     this.doc = {}; // DestroyOnChange
 
@@ -171,13 +173,35 @@ function State() {
         }
         this.number += 1;
         this.switched = true;
-        this.debugStateText.text = "State: " + this.number;
+        this.debugStateText.text = this.number;
         this.run = this.funcarray[this.number];
     }
+    this.substate = 0;
     this.introfunc = function(){
-        console.log("intro func");
-        if (nKey.isDown){
-            this.nextState();
+        if (this.switched){
+            this.substate = 1;
+            this.doc["s000bed1"] = PIXI.Sprite.fromImage(s000bed1);
+            this.doc["s000bed2"] = PIXI.Sprite.fromImage(s000bed2);
+
+            this.doc["s000bed1"].width = WIDTH;
+            this.doc["s000bed1"].height = HEIGHT;
+            this.doc["s000bed2"].width = WIDTH;
+            this.doc["s000bed2"].height = HEIGHT;
+
+            cBack.addChild(this.doc["s000bed1"]);
+
+            this.switched = false;
+        }
+    }
+    nKey.press = function(){
+        console.log(self.number, self.substate);
+        if (self.number === 0){
+            if (self.substate == 2){
+                self.nextState();
+            }else{
+                cBack.removeChild(self.doc["s000bed"+self.substate++]);
+                cBack.addChild(self.doc["s000bed"+self.substate]);
+            }
         }
     }
     this.switched = true;
