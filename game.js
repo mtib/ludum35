@@ -113,16 +113,16 @@ function Game1Sock() {
     this.move = function() {
         delta = {x:0, y:0};
         did = false;
-        if (leftArrow.isDown || aKey.isDown) {
+        if ((leftArrow.isDown || aKey.isDown) && this.sprite.position.x < (WIDTH - 70)) {
             delta.x -= speed;
         }
-        if (rightArrow.isDown || dKey.isDown) {
+        if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x > 70) {
             delta.x += speed;
         }
-        if (upArrow.isDown || wKey.isDown) {
+        if ((upArrow.isDown || wKey.isDown) && this.sprite.position.y > 230) {
             delta.y -= speed;
         }
-        if (downArrow.isDown || sKey.isDown) {
+        if ((downArrow.isDown || sKey.isDown) && this.sprite.position.y < HEIGHT - 100) {
             delta.y += speed;
         }
         magsqr = Math.sqrt(Math.abs(delta.x) + Math.abs(delta.y))
