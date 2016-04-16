@@ -79,12 +79,17 @@ var cGui = new PIXI.Container();
 const fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
 const debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
 const relcenter = (0.5,0.5);
+const nKey = keyboard(78);
 
 function State() {
     self = this;
     this.debugText = new PIXI.Text("Version: "+version+"\n<Debug Information>",debugConfig);
     this.debugText.position = {x:5,y:5};
+    this.debugStateText = new PIXI.Text("State: 0", debugConfig);
+    this.debugStateText.position = {x:5,y:45};
+
     cGui.addChild(this.debugText);
+    cGui.addChild(this.debugStateText);
     this.number = 0;
     this.run = function(){
         console.log("default state");
@@ -92,12 +97,19 @@ function State() {
 
     this.nextState = function(){
         this.number += 1;
+        this.debugStateText.text = "State: " + this.number;
         this.run = this.funcarray[this.number];
     }
     this.introfunc = function(){
         console.log("intro func");
+        if (nKey.isDown){
+            this.nextState();
+        }
     }
-    this.funcarray = [this.introfunc];
+    this.underTheBed = function(){
+        console.log("scary hand");
+    }
+    this.funcarray = [this.introfunc, this.underTheBed];
 
     this.run = this.funcarray[this.number];
 }
