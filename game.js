@@ -1,7 +1,7 @@
 /*
 This is a game by:
 Markus "TiByte" Becker   - Lead Developer
-Lukas "LFalch"           - Programmer
+Lucas "LFalch"           - Programmer
 Aileen                   - Graphic Designer
 Kilian "Malloth Rha"     - Musician
 Micha                    - Junior Programmer
