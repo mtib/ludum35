@@ -254,38 +254,34 @@ function State() {
         this.debugStateText.text = this.number;
         this.run = this.funcarray[this.number];
     }
-    this.introfunc = function(){
-        if (this.switched){
-            this.infotext.text = "Press <Enter> to skip"
-            this.substate = 1;
-            this.doc["pic"] = 1;
-            this.doc["s000bed1"] = PIXI.Sprite.fromImage(s000bed1);
-            this.doc["s000bed2"] = PIXI.Sprite.fromImage(s000bed2);
-            this.doc["s000bed3"] = PIXI.Sprite.fromImage(s000bed3);
+    diasStateGenerator = function(backgrounds) {
+        return function(){
+            if (this.switched){
+                this.infotext.text = "Press <Enter> to skip"
+                this.doc["dias"] = 0;
+                for (var bg in backgrounds){
+                    this.doc[bg] = PIXI.Sprite.fromImage(backgrounds[bg]);
+                    this.doc[bg].width  = WIDTH;
+                    this.doc[bg].height = HEIGHT;
+                }
 
-            this.doc["s000bed1"].width = WIDTH;
-            this.doc["s000bed1"].height = HEIGHT;
-            this.doc["s000bed2"].width = WIDTH;
-            this.doc["s000bed2"].height = HEIGHT;
-            this.doc["s000bed3"].width = WIDTH;
-            this.doc["s000bed3"].height = HEIGHT;
+                cBack.addChild(this.doc[0]);
 
-            cBack.addChild(this.doc["s000bed1"]);
-
-            enterKey.press = function(){
-                if (self.number === 0){
-                    if (self.doc["pic"] == 3){
+                enterKey.press = function(){
+                    if (self.doc["dias"] == backgrounds.length - 1){
                         self.nextState();
+                        enterKey.press = undefined;
                     }else{
-                        cBack.removeChild(self.doc["s000bed"+self.doc["pic"]++]);
-                        cBack.addChild(self.doc["s000bed"+self.doc["pic"]]);
+                        cBack.removeChild(self.doc[self.doc["dias"]++]);
+                        cBack.addChild(self.doc[self.doc["dias"]]);
                     }
                 }
-            }
 
-            this.switched = false;
+                this.switched = false;
+            }
         }
     }
+    this.introfunc = diasStateGenerator([s000bed1, s000bed2, s000bed3]);
     this.switched = true;
     this.underTheBed = function(){
         if (this.switched) {
