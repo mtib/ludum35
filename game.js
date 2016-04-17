@@ -185,7 +185,7 @@ function Game1Sock() {
 }
 
 function vectorDist(d1, d2) {
-    return Math.sqrt(Math.pow(d1.x - d2.x,2) + Math.pow(d1.y -d2.y,2));
+    return Math.hypot(d1.x - d2.x, d1.y -d2.y);
 }
 
 function Game1Hand(startpos, follow) {
@@ -346,8 +346,8 @@ function State() {
         this.debugStateText.text = this.number;
         this.run = this.funcarray[this.number];
     }
-    diasStateGenerator = function(backgrounds) {
-        return function(){
+    diasStateGenerator = (backgrounds) => {
+        return () => {
             if (this.switched){
                 this.infotext.text = "Press <Enter> to proceed"
                 this.doc["dias"] = 0;
@@ -437,7 +437,7 @@ function State() {
             this.endgame1 = true;
         }
     }
-    this.funcarray = [this.introfunc, this.underTheBed, this.preFallfunc];
+    this.funcarray = [this.introfunc, this.underTheBed, this.preFallfunc, () => {}];
 
     this.run = this.funcarray[this.number];
 }
