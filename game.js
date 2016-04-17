@@ -117,6 +117,17 @@ const ssock = "./scenes/001/sock.png"; // normal sock, for use in all? scenes
 const s001armo = "./scenes/001/arm.open.png"; // o = open
 const s001armg = "./scenes/001/arm.sock.png"; // g = grabbed
 
+// Second Story Line Diashow
+const s002wm1 = "./scenes/002/waschmaschine1.jpg";
+const s002wm2 = "./scenes/002/waschmaschine2.jpg";
+const s002wm3 = "./scenes/002/waschmaschine3.jpg";
+const s002wm4 = "./scenes/002/waschmaschine4.jpg";
+
+// BLOBS for Falling Game
+const s003ek1 = "./scenes/003/eklig1.png";
+const s003ek2 = "./scenes/003/eklig2.png";
+const s003ek3 = "./scenes/003/eklig3.png";
+
 const sceneMusic = [ // for the cool kids!
     new Howl({
         src: ['scenes/000/SockventureIntro.ogg'],
@@ -347,7 +358,7 @@ function State() {
                 }
 
                 cBack.addChild(this.doc[0]);
-
+                self = this
                 enterKey.press = function(){
                     if (self.doc["dias"] == backgrounds.length - 1){
                         self.nextState();
@@ -364,7 +375,7 @@ function State() {
     }
 
     this.introfunc = diasStateGenerator([s000bed1, s000bed2, s000bed3]);
-    this.preFallfunc = diasStateGenerator([]);
+    this.preFallfunc = diasStateGenerator([s002wm1, s002wm2, s002wm3, s002wm4]);
     this.switched = true;
     this.underTheBed = function(){
         if (this.switched) {
@@ -456,6 +467,13 @@ PIXI.loader
     .add(s001armg)
     .add(s001armo)
     .add(ssock)
+    .add(s002wm1)
+    .add(s002wm2)
+    .add(s002wm3)
+    .add(s002wm4)
+    .add(s003ek1)
+    .add(s003ek2)
+    .add(s003ek3)
     .load(setup);
 
 function setup(){
