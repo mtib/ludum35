@@ -73,7 +73,7 @@ const WIDTH = 1280;
 const HEIGHT = 720;
 
 // Current version
-const version = "0.05d"
+const version = "0.06d"
 
 // Initialize Renderer
 var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT, {antialiasing: true, transparent: false, resolution: 1});
@@ -218,7 +218,7 @@ function Game1Sock() {
     cMiddle.addChild(this.sprite);
 }
 
-function Game3Sock() {
+function Game3Sock(blobTexes) {
     self = this;
     const size = 96;
     const speed = 3;
@@ -228,6 +228,13 @@ function Game3Sock() {
     this.sprite.height = size;
     const scale = this.sprite.scale.x;
     this.sprite.position = {x: WIDTH*0.5, y: HEIGHT*0.5-150};
+    this.blobsHit = 0;
+
+    this.blobs = [];
+
+    this.blobSpawner = window.setInterval(() => {
+        self.blobs.push(new Blob(blobTexes));
+    }, 600);
 
     this.update = () => {
         xVel = 0;
@@ -240,10 +247,42 @@ function Game3Sock() {
             xVel -= speed;
         }
         this.sprite.x += xVel;
+        for (var b in this.blobs){
+            blob = this.blobs[b];
+            blob.update();
+            if(blob.sprite.y < -28) {
+                blob.die()
+                delete this.blobs[b];
+            }else if(vectorDist(blob.sprite.position, this.sprite.position) < 76) {
+                this.blobsHit++;
+                blob.die()
+                delete this.blobs[b];
+            }
+        }
     };
 
-    this.die = () => cMiddle.removeChild(this.sprite);
+    this.die = () => {
+        cMiddle.removeChild(this.sprite)
+        window.clearInterval(this.blobSpawner);
+        for (var b in this.blobs){
+            delete this.blobs[b];
+        }
+    };
     cMiddle.addChild(this.sprite);
+}
+
+function Blob(blobs) {
+    const size = 64;
+    this.sprite = PIXI.Sprite.fromImage(blobs[Math.floor(Math.random() * 3)]);
+    this.sprite.anchor = relcenter;
+    this.sprite.width = size;
+    this.sprite.height = size;
+    this.sprite.y = HEIGHT+size;
+    this.sprite.x = Math.random() * (WIDTH - 640) + 320;
+
+    this.die = () => cFront.removeChild(this.sprite);
+    this.update = () => this.sprite.y -= 3;
+    cFront.addChild(this.sprite);
 }
 
 function FallingBackground() {
@@ -373,6 +412,7 @@ function State() {
     this.score = new PIXI.Text("0", pointsConfig);
     this.score.position = {x: WIDTH - 5, y: 5};
     this.score.anchor = {x: 1, y:0};
+    this.blobsHit;
 
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
     this.infotext.position = {x: WIDTH/2, y: HEIGHT/2};
@@ -532,25 +572,27 @@ function State() {
     this.fallgame = () => {
         if (this.switched) {
             this.starttime = Date.now();
-            this.distanceFallen = 0;
-            this.blobsHit;
+            this.doc.distanceFallen = 0;
             this.doc.bgs = new FallingBackground();
-            this.doc.blobs = [
-                PIXI.Sprite.fromImage(s003ek1), PIXI.Sprite.fromImage(s003ek2), PIXI.Sprite.fromImage(s003ek3)
-            ];
+            const blobs = [s003ek1, s003ek2, s003ek3];
             this.doc.points = this.score;
-            this.doc.points.text = "0";
+            this.doc.points.text = "0\n0";
 
-            this.doc.gamesock = new Game3Sock();
+            this.doc.gamesock = new Game3Sock(blobs);
 
             cGui.addChild(this.doc.points);
             this.switched = false;
         }
-        this.doc.points.text = Math.floor(this.distanceFallen);
+        this.doc.points.text = Math.floor(this.doc.distanceFallen)+"\n"+this.doc.gamesock.blobsHit;
         this.doc.bgs.update()
         this.doc.gamesock.update()
 
-        this.distanceFallen += 0.01;
+        this.doc.distanceFallen += 0.01;
+
+        if(this.doc.distanceFallen>60){
+            this.blobsHit = this.doc.gamesock.blobsHit;
+            this.nextState();
+        }
     };
 
     this.funcarray = [
