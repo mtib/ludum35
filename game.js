@@ -57,8 +57,8 @@ STRING OF EVENTS:
 003 - Sewerfall game                X
 004 - Story (Sockbert)              X
 005 - Pacman game                   X
-006 - Story (Explanation)
-007 - Plumbing game
+006 - Skip
+007 - Skip
 008 - Story (Break out)
 009 - Sewer Jump                    X
 010 - Story (Getting grabbed)       X
