@@ -135,14 +135,22 @@ function uritom(name) {
     return ['scenes/'+name+'.ogg','scenes/'+name+'.mp3']
 }
 
+const introMusic = new Howl({
+    src: uritom("000/SockventureIntro"),
+    loop: true,
+    volume: 0.4,
+});
+
 const sceneMusic = [ // for the cool kids!
+    introMusic,
     new Howl({
-        src: ['scenes/000/SockventureIntro.ogg'],
+        src: uritom("001/SockventureHand"),
         loop: true,
         volume: 0.4,
     }),
+    introMusic,
     new Howl({
-        src: ['scenes/001/SockventureHand.ogg'],
+        src: uritom("003/SockventureSewerFall"),
         loop: true,
         volume: 0.4,
     })
