@@ -505,7 +505,6 @@ function State() {
     this.score = new PIXI.Text("0", pointsConfig);
     this.score.position = {x: WIDTH - 5, y: 5};
     this.score.anchor = {x: 1, y:0};
-    this.blobsHit;
 
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
     this.infotext.position = {x: WIDTH/2, y: HEIGHT/2};
@@ -685,7 +684,7 @@ function State() {
             this.doc.distanceFallen += 0.01;
 
             if(this.doc.distanceFallen>30){
-                this.blobsHit = this.doc.gamesock.blobsHit;
+                this.health *= this.doc.gamesock.blobsHit == 0 ? 1.5 : Math.pow(0.95, blobsHit);
                 this.nextState();
             }
         },
