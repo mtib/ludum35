@@ -183,7 +183,7 @@ const sceneMusic = [ // for the cool kids!
 function Game1Sock() {
     self = this;
     size = 128 // Pixel
-    speed = 10 // Pixel / Frame
+    speed = 15 // Pixel / Frame
     this.sprite = new PIXI.Sprite.fromImage(ssock);
     this.sprite.anchor = relcenter;
     this.sprite.width = size;
