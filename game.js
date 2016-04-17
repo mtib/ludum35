@@ -197,7 +197,7 @@ function Game1Sock() {
     this.sprite.anchor = relcenter;
     this.sprite.width = size;
     this.sprite.height = size;
-    this.sprite.position = abscenter;
+    this.sprite.position = {x: WIDTH/2,y: HEIGHT/2};
     this.die = () => cMiddle.removeChild(this.sprite);
     this.move = () => {
         delta = {x:0, y:0};
@@ -511,7 +511,7 @@ function State() {
     this.score.anchor = {x: 1, y:0};
 
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
-    this.infotext.position = abscenter;
+    this.infotext.position = {x: WIDTH/2, y:HEIGHT/2};
     this.infotext.anchor = relcenter;
     this.infotext.warn = (msg) => {
         this.infotext.text=msg;
@@ -719,7 +719,7 @@ function State() {
                 this.doc["background"] = PIXI.Sprite.fromImage(s005bg);
                 cBack.addChild(this.doc["background"]);
                 this.switched = false;
-                this.pacmandata.pos = abscenter;
+                this.pacmandata.pos = {x: WIDTH/2, y: HEIGHT/2};
                 this.pacmandata.sprite = PIXI.Sprite.fromImage(ssock);
                 this.doc["pacmansock"] = this.pacmandata.sprite;
                 cFront.addChild(this.doc["pacmansock"]);
@@ -922,20 +922,7 @@ function State() {
                 msg.anchor = relcenter;
                 msg.position = {x: WIDTH/2, y:HEIGHT/2};
                 cGui.addChild(msg);
-                renderer.backgroundColor = 0x001;
-                this.col = (x) => {
-                    factor = 255 / Math.sqrt(1.5);
-                    var red = Math.sqrt(Math.cos(x+(Math.PI+1)/2)+1/2) *faktor;
-                    var green = Math.sqrt(Math.cos(x)+1/2) *faktor;
-                    var blue = Math.sqrt(Math.cos(x-(Math.PI+1)/2)+1/2) *faktor;
-
-                }
-                window.setInterval(()=>{
-                    v = renderer.backgroundColor;
-                    v = v << 1;
-                    v += v % 0xFFF
-                    renderer.backgroundColor = v;
-                }, 500);
+                renderer.backgroundColor = 0x000;
             }
         }
     ];
