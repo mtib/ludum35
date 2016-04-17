@@ -51,19 +51,19 @@ STRING OF EVENTS:
 */
 
 /*
-000 - Intro
-001 - Under the bed game
-002 - Story (washing machine)
-003 - Sewerfall game
+000 - Intro                         X
+001 - Under the bed game            X
+002 - Story (washing machine)       X
+003 - Sewerfall game                X
 004 - Story (Sockbert)
 005 - Snake game
 006 - Story (Explanation)
 007 - Plumbing game
 008 - Story (Break out)
-009 - Sewer Jump
-010 - Story (Getting grabbed)
-011 - Boss fight
-012 - Thanks for playing
+009 - Sewer Jump                    X
+010 - Story (Getting grabbed)       X
+011 - Boss fight                    X
+012 - Thanks for playing            X
 */
 
 // Cheat Sheet: https://github.com/mtib/ludum34/blob/master/game.js
@@ -73,7 +73,7 @@ const WIDTH = 1280;
 const HEIGHT = 720;
 
 // Current version
-const version = "0.04d"
+const version = "0.05d"
 
 // Initialize Renderer
 var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT, {antialiasing: true, transparent: false, resolution: 1});
@@ -324,8 +324,12 @@ function State() {
         }
         enterKey.press = undefined;
 
-        sceneMusic[this.number++].stop();
-        sceneMusic[this.number].play();
+        if (sceneMusic[this.number+1]){
+            sceneMusic[this.number++].stop();
+            sceneMusic[this.number].play();
+        } else {
+            this.number+=1;
+        }
 
         this.switched = true;
         this.debugStateText.text = this.number;
