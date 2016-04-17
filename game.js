@@ -178,12 +178,15 @@ function Game1Hand(position) {
     this.sgrab = new PIXI.Sprite.fromImage(s001armg);
 
     this.sopen.position = position;
-    this.sopen.rotation = Math.atan((this.sopen.position.y - gamestate.playerpos().y)/(this.sopen.position.x - gamestate.playerpos().x) );
+    this.sopen.anchor = {x: 0.5, y: 1};
+    this.sopen.rotation = Math.atan((this.sopen.position.y - gamestate.playerpos().y)/(this.sopen.position.x -
+    gamestate.playerpos().x))+ 90;
+    this.sopen.scale = {x: .2, y: .2};
 
     this.grab = function() {
         this.sgrab.position = this.sopen.position;
         this.sgrab.anchor = this.sopen.anchor;
-        this.sgrab.size = this.sopen.size;
+        this.sgrab.scale = this.sopen.scale;
         this.sgrab.rotation = this.sopen.rotation;
         cFront.removeChild(this.sopen);
         cFront.addChild(this.sgrab);
@@ -191,14 +194,22 @@ function Game1Hand(position) {
     this.release = function() {
         // shouldnt be needed...
     }
+    this.delta = function() {
+        ppos = gamestate.playerpos();
+        return {x: this.sopen.position.x - ppos.x, y: this.sopen.position.y - ppos.y};
+    }
     this.logic = function() {
-        // TODO move
+        d = this.delta();
+        this.sopen.position.x += d.x/100.0;
+        this.sopen.position.y += d.y/100.0;
     }
     this.die = function() {
         cFront.removeChild(this.sopen);
         cFront.removeChild(this.sgrab);
+        window.clearInterval(this.move);
         delete this;
     }
+    this.move = window.setInterval(this.logic, 20);
     cFront.addChild(this.sopen);
 }
 
