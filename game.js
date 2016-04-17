@@ -173,21 +173,16 @@ newHowl = (name) => new Howl({
 
 const introMusic = newHowl("000/SockventureIntro");
 
-const dummy = {
-    play: () => {},
-    stop: () => {}
-}
-
 const sceneMusic = [ // for the cool kids!
     introMusic,
     newHowl("001/SockventureHand"),
     introMusic,
     newHowl("003/SockventureSewerFall"),
-    dummy,
+    false,
     newHowl("005/SockventureSnake"),
     introMusic,
-    dummy,
-    dummy,
+    false,
+    false,
     newHowl("009/SockventureSewerJump"),
     introMusic,
     newHowl("011/SockventureBoss")
@@ -330,9 +325,7 @@ function FallingBackground() {
     }
 }
 
-function vectorDist(d1, d2) {
-    return Math.hypot(d1.x - d2.x, d1.y -d2.y);
-}
+vectorDist = (d1, d2) => Math.hypot(d1.x - d2.x, d1.y -d2.y);
 
 function Game1Hand(startpos, follow) {
     this.sopen = new PIXI.Sprite.fromImage(s001armo);
