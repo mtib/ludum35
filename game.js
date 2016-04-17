@@ -296,13 +296,12 @@ function Game1Hand(startpos, follow) {
 
 function State() {
     self = this;
-    this.debugText = new PIXI.Text("Version: "+version+"\n<Debug Information>\nState: ",debugConfig);
+    const dbgTxt = "Version: "+version+"\n<Debug Information>\nState: ";
+    this.debugText = new PIXI.Text(dbgTxt + 0, debugConfig);
     this.debugText.position = {x:5,y:5};
     this.score = new PIXI.Text("0", pointsConfig);
     this.score.position = {x: WIDTH - 5, y: 5};
     this.score.anchor = {x: 1, y:0};
-    this.debugStateText = new PIXI.Text("0", debugConfig);
-    this.debugStateText.position = {x:89,y:45};
 
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
     this.infotext.position = {x: WIDTH/2, y: HEIGHT/2};
@@ -324,7 +323,6 @@ function State() {
 
     cGui.addChild(this.infotext);
     cGui.addChild(this.debugText);
-    cGui.addChild(this.debugStateText);
 
     sceneMusic[0].play();
     this.run = () => console.log("default state");
@@ -353,7 +351,7 @@ function State() {
         }
 
         this.switched = true;
-        this.debugStateText.text = this.number;
+        this.debugText.text = dbgTxt + this.number;
         this.run = this.funcarray[this.number];
     }
     diasStateGenerator = (backgrounds) => () => {
