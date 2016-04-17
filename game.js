@@ -422,6 +422,7 @@ function Game1Hand(startpos, follow) {
 
 function State() {
     self = this;
+    this.health = 100; // * x | x>1 if successfull | 0<x<1 if failure
     const dbgTxt = "Version: "+version+" /";
     this.debugText = new PIXI.Text(dbgTxt+0, debugConfig);
     this.debugText.position = {x:5,y:5};
@@ -716,7 +717,64 @@ function State() {
             s010s2]),
         // STATE 011 //
         () => {
-            // TODO impl ENDING
+            if (this.switched) {
+                this.doc.background = new PIXI.Sprite.fromImage(s012s1);
+                cBack.addChild(this.doc.background);
+                var ownHealth = {
+                    font: "50px monospace",
+                    fill: "#FFFFFF",
+                    dropShadow: true,
+                    dropShadowColor: "#990000",
+                    dropShadowDistance: "1px",
+                    align: "center",
+                };
+                var bossHealth = {
+                    font: "70px monospace",
+                    fill: "#990000",
+                    dropShadow: true,
+                    dropShadowColor: "#FFFFFF",
+                    dropShadowDistance: "1px",
+                    align: "center,"
+                };
+                this.bossHealth = 500;
+                this.display = {
+                    sock: new PIXI.Text(this.health, ownHealth),
+                    boss: new PIXI.Text(this.bossHealth, bossHealth)
+                }
+                this.doc.so = new PIXI.Sprite.fromImage(ssock);
+                this.doc.d1 = this.display.sock;
+                this.doc.d2 = this.display.boss;
+
+                this.display.sock.position = {x:100, y: 400};
+                this.display.sock.anchor = relcenter;
+                this.display.boss.position = {x:WIDTH/2, y: 100};
+                this.display.boss.anchor = relcenter;
+                this.doc.so.position = {x: 100, y:600};
+
+                cGui.addChild(this.display.sock);
+                cGui.addChild(this.display.boss);
+                cFront.addChild(this.doc.so);
+
+                this.time = Date.now()
+                this.yourTurn = true;
+                this.updateText = () => {
+                    this.display.sock.text = Math.floor(this.health);
+                    this.display.boss.text = Math.floor(this.bossHealth);
+                }
+                this.sockAttack = () => {this.bossHealth -= Math.random() * 60 + 20;   this.updateText()};
+                this.bossAttack = () => {this.health -= Math.random() * 20 + 30;       this.updateText()};
+            }
+            if (Date.now() - this.time > 800) {
+                if (this.yourTurn) {
+                    this.sockAttack();
+                } else {
+                    this.bossAttack();
+                }
+
+                this.yourTurn = !this.yourTurn;
+                this.time = Date.now();
+            }
+
         },
         // STATE 012 //
         diasStateGenerator([s012s1,
