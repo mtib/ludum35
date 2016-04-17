@@ -163,6 +163,7 @@ const s011boss = resourc("011/boss.png");
 const s012s1 = resourc("012/boss.bg1.jpg");
 const s012s2 = resourc("012/boss.bg2.jpg");
 const s012s3 = resourc("012/boss.bg3.jpg");
+const s012s4 = resourc("012/boss.bg4.jpg");
 
 newHowl = (name) => new Howl({
     src: ['scenes/'+name+'.ogg','scenes/'+name+'.mp3'],
@@ -568,6 +569,7 @@ function State() {
         this.jumpgame,          // 009
         this.winjump,           // 010
         this.bossscene,         // 011
+        diasStateGenerator([s012s1, s012s2, s012s3, s012s4])
     ];
 
     this.run = this.funcarray[this.number];
