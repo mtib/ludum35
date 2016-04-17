@@ -687,7 +687,7 @@ function State() {
 
         this.doc.distanceFallen += 0.01;
 
-        if(this.doc.distanceFallen>50){
+        if(this.doc.distanceFallen>30){
             this.blobsHit = this.doc.gamesock.blobsHit;
             this.nextState();
         }
