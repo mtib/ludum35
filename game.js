@@ -144,13 +144,11 @@ const s004s8 = "./scenes/004/sewer8.jpg";
 const s004s9 = "./scenes/004/sewer9.jpg";
 const s004s10 = "./scenes/004/sewer10.jpg";
 
-function newHowl(name) {
-    return new Howl({
-        src: ['scenes/'+name+'.ogg','scenes/'+name+'.mp3'],
-        loop: true,
-        volume: 0.4,
-    })
-}
+newHowl = (name) => new Howl({
+    src: ['scenes/'+name+'.ogg','scenes/'+name+'.mp3'],
+    loop: true,
+    volume: 0.4,
+});
 
 const introMusic = newHowl("000/SockventureIntro");
 
@@ -170,10 +168,8 @@ function Game1Sock() {
     this.sprite.width = size;
     this.sprite.height = size;
     this.sprite.position = {x: WIDTH*0.5, y: HEIGHT*0.5};
-    this.die = function() {
-        cMiddle.removeChild(this.sprite);
-    }
-    this.move = function() {
+    this.die = () => cMiddle.removeChild(this.sprite);
+    this.move = () => {
         delta = {x:0, y:0};
         if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < WIDTH - 100) {
             delta.x += speed;
@@ -231,7 +227,7 @@ function Game1Hand(startpos, follow) {
 
     this.correction = -20;
 
-    this.lookatsock = function() {
+    this.lookatsock = () => {
         this.sopen.rotation = Math.atan((this.sopen.position.y - this.aim.y)/(this.sopen.position.x - this.aim.x));
         if (this.sopen.position.x > this.aim.x) {
             this.sopen.rotation += Math.PI;
@@ -243,7 +239,7 @@ function Game1Hand(startpos, follow) {
 
     this.grabbed = false;
 
-    this.grab = function() {
+    this.grab = () => {
         this.sgrab.position = this.sopen.position;
         this.sgrab.anchor = this.sopen.anchor;
         this.sgrab.scale = this.sopen.scale;
@@ -253,14 +249,10 @@ function Game1Hand(startpos, follow) {
         cFront.removeChild(this.sopen);
         cFront.addChild(this.sgrab);
     }
-    this.release = function() {
-        // shouldnt be needed...
-        this.die();
-    }
-    this.delta = function() {
-        return {x: this.sopen.position.x - this.aim.x, y: this.sopen.position.y - this.aim.y};
-    }
-    this.decideReturn = function(disttoaim) {
+    // shouldnt be needed...
+    this.release = () => this.die();
+    this.delta = () => {return {x: this.sopen.position.x - this.aim.x, y: this.sopen.position.y - this.aim.y}};
+    this.decideReturn = (disttoaim) => {
         if ( disttoaim < 20  && !this.return) {
             this.return = true;
             this.friction = -40;
@@ -278,7 +270,7 @@ function Game1Hand(startpos, follow) {
             window.setTimeout(function(){gamestate.nextState()}, 1000);
         }
     }
-    this.logic = function() {
+    this.logic = () => {
         const d = this.delta();
         const di = vectorDist(d, {x:0,y:0});
         this.sopen.position.x -= (d.x/di * 600) / this.friction;
@@ -292,7 +284,7 @@ function Game1Hand(startpos, follow) {
         }
         //this.lookatsock();
     }
-    this.die = function() {
+    this.die = () => {
         cFront.removeChild(this.sopen);
         cFront.removeChild(this.sgrab);
         window.clearInterval(this.move);
@@ -319,7 +311,7 @@ function State() {
     this.doc = {}; // DestroyOnChange
     this.number = 0;
 
-    this.playerpos = function() {
+    this.playerpos = () => {
         switch (this.number) {
             case 1:
                 if (this.doc["gamesock"]){
@@ -335,11 +327,9 @@ function State() {
     cGui.addChild(this.debugStateText);
 
     sceneMusic[0].play();
-    this.run = function(){
-        console.log("default state");
-    }
+    this.run = () => console.log("default state");
 
-    this.nextState = function(){
+    this.nextState = () => {
         for (var sprite in this.doc) {
             if (this.doc.hasOwnProperty(sprite)) {
                 if (this.doc[sprite].die) {
@@ -415,8 +405,8 @@ function State() {
                 window.setTimeout(function(){that.infotext.text = ""}, 4000);
             }(this);
 
-            this.spawnHands = function(self) {
-                return window.setInterval(function () {
+            this.spawnHands = (self) => window.setInterval(
+                () => {
                     orientation = Math.floor(Math.random() * 4.0);
                     rx = WIDTH * Math.random();
                     ry = HEIGHT * Math.random();
@@ -437,8 +427,8 @@ function State() {
                             break;
                     }
                     self.doc[Date.now()] = new Game1Hand(pos);
-                }, 2300);
-            };
+                },
+            2300);
             this.handSpawner = this.spawnHands(this);
 
             this.switched = false;
