@@ -73,7 +73,7 @@ const WIDTH = 1280;
 const HEIGHT = 720;
 
 // Current version
-const version = "0.01d"
+const version = "0.04d"
 
 // Initialize Renderer
 var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT, {antialiasing: true, transparent: false, resolution: 1});
