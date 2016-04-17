@@ -91,10 +91,10 @@ var cGui = new PIXI.Container();
 
 
 // Config goes here:
-const fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
-const debugConfig = {font: "20px Arial", fill: "#FFF", align: "left"};
-const pointsConfig = {font: "50px monospace", fill: "#000000", align: "right", dropShadow: true, dropShadowColor: "#FF0000"};
-const infoConfig = {font: "60px Arial", fill: "#FFFFFF", align: "center", dropShadow: true, dropShadowColor: "#000000", dropShadowDistance: 2};
+const fontConfig = {font: "30px 'Arvo'", fill: "#000000", align: "left", dropShadow: true, dropShadowColor: "#FFFFFF"};
+const debugConfig = {font: "20px 'Arvo'", fill: "#FFF", align: "left"};
+const pointsConfig = {font: "50px 'Arvo'", fill: "#000000", align: "right", dropShadow: true, dropShadowColor: "#FF0000"};
+const infoConfig = {font: "60px 'Arvo'", fill: "#FFFFFF", align: "center", dropShadow: true, dropShadowColor: "#000000", dropShadowDistance: 10};
 
 const relcenter = {x:0.5,y:0.5};
 const abscenter = {x:WIDTH/2,y:HEIGHT/2};
@@ -785,14 +785,17 @@ function State() {
                     this.score.style.fill = "#FFFFFF";
                     this.doc["score"] = this.score;
                     cGui.addChild(this.score);
+                }
+                self = this
+                this.pacmandata.loop = window.setInterval(()=>{self.pacmandata.logic()}, 20);
+                window.setTimeout(()=>{
+                    this.health *= 0.7 + 0.3 * this.pacmandata.score / (this.pacmandata.num / 2);
                     if (this.pacmandata.score >= this.pacmandata.num) {
                         window.clearInterval(this.pacmandata.loop);
                         d = (self) => {window.setTimeout(self.nextState, 1000)};
                         d(this);
                     }
-                }
-                self = this
-                this.pacmandata.loop = window.setInterval(()=>{self.pacmandata.logic()}, 20);
+                }, 15);
             }
         },
         // STATE 006 //
@@ -838,19 +841,19 @@ function State() {
                 this.doc.background.height = HEIGHT;
                 cBack.addChild(this.doc.background);
                 var ownHealth = {
-                    font: "50px monospace",
+                    font: "50px 'Arvo'",
                     fill: "#FFFFFF",
                     dropShadow: true,
                     dropShadowColor: "#990000",
-                    dropShadowDistance: 2,
+                    dropShadowDistance: 5,
                     align: "center",
                 };
                 var bossHealth = {
-                    font: "70px monospace",
+                    font: "70px 'Arvo'",
                     fill: "#FFFFFF",
                     dropShadow: true,
                     dropShadowColor: "#FF0000",
-                    dropShadowDistance: 2,
+                    dropShadowDistance: 5,
                     align: "center",
                 };
                 this.bossHealth = 500;
@@ -919,7 +922,7 @@ function State() {
             if (this.switched){
                 this.switched = false;
                 var msg = new PIXI.Text("Thanks for Playing!", {
-                    font: "120px Arial",
+                    font: "120px 'Arvo'",
                     fill: "#FFF",
                     align:"center",
                     dropShadow: true,
