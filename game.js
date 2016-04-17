@@ -173,11 +173,24 @@ newHowl = (name) => new Howl({
 
 const introMusic = newHowl("000/SockventureIntro");
 
+const dummy = {
+    play: () => {},
+    stop: () => {}
+}
+
 const sceneMusic = [ // for the cool kids!
     introMusic,
     newHowl("001/SockventureHand"),
     introMusic,
-    newHowl("003/SockventureSewerFall")
+    newHowl("003/SockventureSewerFall"),
+    dummy,
+    newHowl("005/SockventureSnake"),
+    introMusic,
+    dummy,
+    dummy,
+    newHowl("009/SockventureSewerJump"),
+    introMusic,
+    newHowl("011/SockventureBoss")
 ];
 
 function Game1Sock() {
