@@ -865,24 +865,26 @@ function State() {
                 }
                 this.sockAttack = () => {this.bossHealth -= Math.random() * 60 + 20;   this.updateText()};
                 this.bossAttack = () => {this.health -= Math.random() * 20 + 30;       this.updateText()};
-            }
-            this.fight = () => {
-                if (this.yourTurn) {
-                    this.sockAttack();
-                } else {
-                    this.bossAttack();
+
+                // Fighting
+                this.fight = () => {
+                    if (this.yourTurn) {
+                        this.sockAttack();
+                    } else {
+                        this.bossAttack();
+                    }
+                    if ( this.bossHealth < 0)  {
+                        // you win
+                        window.clearInterval(this.fightloop);
+                    } else if ( this.health < 0 ) {
+                        // you lose
+                        window.clearInterval(this.fightloop);
+                    }
+                    this.yourTurn = !this.yourTurn;
                 }
-                if ( this.bossHealth < 0)  {
-                    // you win
-                    window.clearInterval(this.fightloop);
-                } else if ( this.health < 0 ) {
-                    // you lose
-                    window.clearInterval(this.fightloop);
-                }
-                this.yourTurn = !this.yourTurn;
+                self = this;
+                this.fightloop = window.setInterval(()=>{self.fight()},800);
             }
-            self = this;
-            this.fightloop = window.setInterval(()=>{self.fight()},800);
         },
         // STATE 012 //
         diasStateGenerator([s012s1,
