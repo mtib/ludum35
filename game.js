@@ -475,12 +475,18 @@ function State() {
         }
         enterKey.press = undefined;
 
-        if (sceneMusic[this.number+1]){
-            sceneMusic[this.number++].stop();
+        this.number++;
+        if (sceneMusic[this.number]) {
+            // Make sure the music is changed
+            for (var i = this.number-1; i >= 0; i--)
+                if(sceneMusic[i]){
+                    sceneMusic[i].stop();
+                    break;
+                }
+
             sceneMusic[this.number].play();
-        } else {
-            this.number+=1;
-        }
+        }else
+            console.log("Continuing music!")
 
         this.switched = true;
         this.debugText.text = dbgTxt + this.number;
