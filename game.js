@@ -514,199 +514,218 @@ function State() {
             this.switched = false;
         }
     }
-
-    this.introfunc = diasStateGenerator([s000bed1, s000bed2, s000bed3]);
-    this.preFallfunc = diasStateGenerator([s002wm1, s002wm2, s002wm3, s002wm4]);
-    this.postFallfunc = diasStateGenerator([s004s1, s004s2, s004s3, s004s4, s004s5, s004s6, s004s7, s004s8, s004s9, s004s10]);
-    this.preJump = diasStateGenerator([s008s])
-    this.jumpgame = () => {
-        this.nextState() // TODO impl game
-    }
-    this.pacmanGamefunc = () => {
-        if (this.switched) {
-            this.pacmandata = {};
-            this.pacmandata.down = () => {return sKey.isDown || downArrow.isDown};
-            this.pacmandata.up = () => {return wKey.isDown || upArrow.isDown};
-            this.pacmandata.left = () => {return aKey.isDown || leftArrow.isDown};
-            this.pacmandata.right = () => {return dKey.isDown || rightArrow.isDown};
-            this.pacmandata.warn = "Use [WASD] to collect fluff";
-            this.infotext.warn(this.pacmandata.warn);
-            this.doc["background"] = PIXI.Sprite.fromImage(s005bg);
-            cBack.addChild(this.doc["background"]);
-            this.switched = false;
-            this.pacmandata.pos = {x:WIDTH/2, y:HEIGHT/2, or: 0};
-            this.pacmandata.sprite = PIXI.Sprite.fromImage(ssock);
-            this.doc["pacmansock"] = this.pacmandata.sprite;
-            cFront.addChild(this.doc["pacmansock"]);
-            this.pacmandata.defscale = {x:0.1, y:0.1};
-            this.pacmandata.sprite.scale = {x:this.pacmandata.defscale.x, y:this.pacmandata.defscale.y};
-            this.pacmandata.sprite.anchor = relcenter;
-            this.pacmandata.sprite.pivot = relcenter;
-            this.pacmandata.fluff = []
-            this.pacmandata.num = 50;
-            this.pacmandata.score = 0;
-            this.pacmandata.speed = 10;
-            for (var i = 0; i < this.pacmandata.num; i++) {
-                var margin = 100;
-                var vec = {};
-                var found = false
-                while (!found){
-                    vec.x = Math.random() * (WIDTH - 2 * margin) + margin;
-                    vec.y = Math.random() * (HEIGHT - 2 * margin) + margin;
-                    if (vectorDist(this.pacmandata.pos, vec) > 70) {
-                        found = true;
-                    }
-                }
-                var t = PIXI.Sprite.fromImage(s005fl);
-                t.anchor = relcenter;
-                t.pivot = relcenter;
-                t.position = vec;
-                t.scale = {x:0.1, y:0.1};
-                this.doc["fluff"+i] = t;
-                this.pacmandata.fluff.push(this.doc["fluff"+i]);
-            }
-            for (var i = 0; i < this.pacmandata.fluff.length; i++) {
-                cMiddle.addChild(this.pacmandata.fluff[i]);
-            }
-            this.pacmandata.logic = () => {
-                if (this.pacmandata.down())  this.pacmandata.pos.y += this.pacmandata.speed;
-                if (this.pacmandata.up())    this.pacmandata.pos.y -= this.pacmandata.speed;
-                if (this.pacmandata.left())  {
-                    this.pacmandata.pos.x -= this.pacmandata.speed;
-                    this.pacmandata.sprite.scale.x = this.pacmandata.defscale.x
-                };
-                if (this.pacmandata.right()) {
-                    this.pacmandata.pos.x += this.pacmandata.speed;
-                    this.pacmandata.sprite.scale.x = -this.pacmandata.defscale.x
-                };
-                this.pacmandata.sprite.position = this.pacmandata.pos;
-                for (var i = 0; i < this.pacmandata.fluff.length; i++) {
-                    if (this.pacmandata.fluff[i]){
-                        this.pacmandata.fluff[i].rotation += Math.random();
-                        if(vectorDist(this.pacmandata.fluff[i].position, this.pacmandata.pos) < 60) {
-                            cMiddle.removeChild(this.pacmandata.fluff[i])
-                            this.pacmandata.fluff[i]=undefined;
-                            this.pacmandata.score += 1;
-                        }
-                    }
-                }
-                this.score.text = this.pacmandata.score;
-                this.score.style.fill = "#FFFFFF";
-                this.doc["score"] = this.score;
-                cGui.addChild(this.score);
-                if (this.pacmandata.score >= this.pacmandata.num) {
-                    window.clearInterval(this.pacmandata.loop);
-                    d = (self) => {window.setTimeout(self.nextState, 1000)};
-                    d(this);
-                }
-            }
-            self = this
-            this.pacmandata.loop = window.setInterval(()=>{self.pacmandata.logic()}, 20);
-        }
-    }
-    this.winjump = diasStateGenerator([s010s1, s010s2]);
-    this.bossscene = () => {
-        // TODO impl ENDING
-    }
     this.switched = true;
-    this.underTheBed = () => {
-        if (this.switched) {
-            this.infotext.warn("Use [WASD] to move");
-            this.starttime = Date.now();
-            this.doc["points"] = this.score;
-            this.doc["s001bg"] = PIXI.Sprite.fromImage(s001bg);
-            this.doc["s001armo"] = PIXI.Sprite.fromImage(s001armo);
-            this.doc["s001armg"] = PIXI.Sprite.fromImage(s001armg);
-
-            this.doc["s001bg"].width = WIDTH;
-            this.doc["s001bg"].height = HEIGHT;
-            cBack.addChild(this.doc["s001bg"]);
-            cGui.addChild(this.doc["points"]);
-            this.doc["gamesock"] = new Game1Sock();
-
-            this.spawnHands = (self) => window.setInterval(
-                () => {
-                    orientation = Math.floor(Math.random() * 4.0);
-                    rx = WIDTH * Math.random();
-                    ry = HEIGHT * Math.random();
-                    pos = {};
-                    margin = 100;
-                    switch (orientation) {
-                        case 0: // top
-                            pos = {x: rx, y: -margin};
-                            break;
-                        case 1: // right
-                            pos = {x: WIDTH+margin, y: ry};
-                            break;
-                        case 2: // bottom
-                            pos = {x: rx, y: HEIGHT+margin};
-                            break;
-                        case 3: // left
-                            pos = {x: -margin, y: ry};
-                            break;
-                    }
-                    self.doc[Date.now()] = new Game1Hand(pos);
-                },
-            1500);
-            this.handSpawner = this.spawnHands(this);
-
-            this.switched = false;
-            this.endgame1 = false;
-        }
-        dt = (Date.now() - this.starttime) / 1000.0;
-        if (this.doc["gamesock"]){
-            this.doc["gamesock"].move();
-        }
-        if (this.doc["points"] && dt <= 15){
-            this.doc["points"].text = Math.floor(dt);
-        } else if (!this.endgame1) {
-            window.clearInterval(this.handSpawner)
-            this.doc["finalhand"]=new Game1Hand({x:.5*WIDTH,y: -50}, true);
-            this.endgame1 = true;
-        }
-    };
-
-    this.fallgame = () => {
-        if (this.switched) {
-            this.infotext.warn("Avoid the blobs!");
-            this.starttime = Date.now();
-            this.doc.distanceFallen = 0;
-            this.doc.bgs = new FallingBackground();
-            const blobs = [s003ek1, s003ek2, s003ek3];
-            this.doc.points = this.score;
-            this.doc.points.text = "0\n0";
-
-            this.doc.gamesock = new Game3Sock(blobs);
-
-            cGui.addChild(this.doc.points);
-            this.switched = false;
-        }
-        this.doc.points.text = Math.floor(this.doc.distanceFallen)+"\n"+this.doc.gamesock.blobsHit;
-        this.doc.bgs.update()
-        this.doc.gamesock.update()
-
-        this.doc.distanceFallen += 0.01;
-
-        if(this.doc.distanceFallen>50){
-            this.blobsHit = this.doc.gamesock.blobsHit;
-            this.nextState();
-        }
-    };
 
     this.funcarray = [
-        this.introfunc,         // 000
-        this.underTheBed,       // 001
-        this.preFallfunc,       // 002
-        this.fallgame,          // 003
-        this.postFallfunc,      // 004
-        this.pacmanGamefunc,    // 005
-        this.nextState, // skip    006
-        this.nextState, // skip    007
-        this.preJump,           // 008
-        this.jumpgame,          // 009
-        this.winjump,           // 010
-        this.bossscene,         // 011
-        diasStateGenerator([s012s1, s012s2, s012s3, s012s4])
+        // STATE 000 //
+        diasStateGenerator([
+            s000bed1,           // intro sequence
+            s000bed2,           // human searching sock
+            s000bed3]),
+        // STATE 001 //
+        () => {
+            if (this.switched) {
+                this.infotext.warn("Use [WASD] to move");
+                this.starttime = Date.now();
+                this.doc["points"] = this.score;
+                this.doc["s001bg"] = PIXI.Sprite.fromImage(s001bg);
+                this.doc["s001armo"] = PIXI.Sprite.fromImage(s001armo);
+                this.doc["s001armg"] = PIXI.Sprite.fromImage(s001armg);
+                this.doc["s001bg"].width = WIDTH;
+                this.doc["s001bg"].height = HEIGHT;
+                cBack.addChild(this.doc["s001bg"]);
+                cGui.addChild(this.doc["points"]);
+                this.doc["gamesock"] = new Game1Sock();
+                this.spawnHands = (self) => window.setInterval(
+                    () => {
+                        orientation = Math.floor(Math.random() * 4.0);
+                        rx = WIDTH * Math.random();
+                        ry = HEIGHT * Math.random();
+                        pos = {};
+                        margin = 100;
+                        switch (orientation) {
+                            case 0: // top
+                                pos = {x: rx, y: -margin};
+                                break;
+                            case 1: // right
+                                pos = {x: WIDTH+margin, y: ry};
+                                break;
+                            case 2: // bottom
+                                pos = {x: rx, y: HEIGHT+margin};
+                                break;
+                            case 3: // left
+                                pos = {x: -margin, y: ry};
+                                break;
+                        }
+                        self.doc[Date.now()] = new Game1Hand(pos);
+                    },
+                1500);
+                this.handSpawner = this.spawnHands(this);
+
+                this.switched = false;
+                this.endgame1 = false;
+            }
+            dt = (Date.now() - this.starttime) / 1000.0;
+            if (this.doc["gamesock"]){
+                this.doc["gamesock"].move();
+            }
+            if (this.doc["points"] && dt <= 15){
+                this.doc["points"].text = Math.floor(dt);
+            } else if (!this.endgame1) {
+                window.clearInterval(this.handSpawner)
+                this.doc["finalhand"]=new Game1Hand({x:.5*WIDTH,y: -50}, true);
+                this.endgame1 = true;
+            }
+        },
+        // STATE 002 //
+        diasStateGenerator([
+            s002wm1,            // sock goes down the
+            s002wm2,            // drain.
+            s002wm3,
+            s002wm4]),
+        // STATE 003 //
+        () => {
+            if (this.switched) {
+                this.infotext.warn("Avoid the blobs!");
+                this.starttime = Date.now();
+                this.doc.distanceFallen = 0;
+                this.doc.bgs = new FallingBackground();
+                const blobs = [s003ek1, s003ek2, s003ek3];
+                this.doc.points = this.score;
+                this.doc.points.text = "0\n0";
+
+                this.doc.gamesock = new Game3Sock(blobs);
+
+                cGui.addChild(this.doc.points);
+                this.switched = false;
+            }
+            this.doc.points.text = Math.floor(this.doc.distanceFallen)+"\n"+this.doc.gamesock.blobsHit;
+            this.doc.bgs.update()
+            this.doc.gamesock.update()
+
+            this.doc.distanceFallen += 0.01;
+
+            if(this.doc.distanceFallen>50){
+                this.blobsHit = this.doc.gamesock.blobsHit;
+                this.nextState();
+            }
+        },
+        // STATE 004 //
+        diasStateGenerator([
+            s004s1,             // sock meets sockbert
+            s004s2,             // get's told how to escape
+            s004s3,             // goes on adventure
+            s004s4,             // character developement
+            s004s5,
+            s004s6,
+            s004s7,
+            s004s8,
+            s004s9,
+            s004s10]),
+        // STATE 005 //
+        () => {
+            if (this.switched) {
+                this.pacmandata = {};
+                this.pacmandata.down = () => {return sKey.isDown || downArrow.isDown};
+                this.pacmandata.up = () => {return wKey.isDown || upArrow.isDown};
+                this.pacmandata.left = () => {return aKey.isDown || leftArrow.isDown};
+                this.pacmandata.right = () => {return dKey.isDown || rightArrow.isDown};
+                this.pacmandata.warn = "Use [WASD] to collect fluff";
+                this.infotext.warn(this.pacmandata.warn);
+                this.doc["background"] = PIXI.Sprite.fromImage(s005bg);
+                cBack.addChild(this.doc["background"]);
+                this.switched = false;
+                this.pacmandata.pos = {x:WIDTH/2, y:HEIGHT/2, or: 0};
+                this.pacmandata.sprite = PIXI.Sprite.fromImage(ssock);
+                this.doc["pacmansock"] = this.pacmandata.sprite;
+                cFront.addChild(this.doc["pacmansock"]);
+                this.pacmandata.defscale = {x:0.1, y:0.1};
+                this.pacmandata.sprite.scale = {x:this.pacmandata.defscale.x, y:this.pacmandata.defscale.y};
+                this.pacmandata.sprite.anchor = relcenter;
+                this.pacmandata.sprite.pivot = relcenter;
+                this.pacmandata.fluff = []
+                this.pacmandata.num = 50;
+                this.pacmandata.score = 0;
+                this.pacmandata.speed = 10;
+                for (var i = 0; i < this.pacmandata.num; i++) {
+                    var margin = 100;
+                    var vec = {};
+                    var found = false
+                    while (!found){
+                        vec.x = Math.random() * (WIDTH - 2 * margin) + margin;
+                        vec.y = Math.random() * (HEIGHT - 2 * margin) + margin;
+                        if (vectorDist(this.pacmandata.pos, vec) > 70) {
+                            found = true;
+                        }
+                    }
+                    var t = PIXI.Sprite.fromImage(s005fl);
+                    t.anchor = relcenter;
+                    t.pivot = relcenter;
+                    t.position = vec;
+                    t.scale = {x:0.1, y:0.1};
+                    this.doc["fluff"+i] = t;
+                    this.pacmandata.fluff.push(this.doc["fluff"+i]);
+                }
+                for (var i = 0; i < this.pacmandata.fluff.length; i++) {
+                    cMiddle.addChild(this.pacmandata.fluff[i]);
+                }
+                this.pacmandata.logic = () => {
+                    if (this.pacmandata.down())  this.pacmandata.pos.y += this.pacmandata.speed;
+                    if (this.pacmandata.up())    this.pacmandata.pos.y -= this.pacmandata.speed;
+                    if (this.pacmandata.left())  {
+                        this.pacmandata.pos.x -= this.pacmandata.speed;
+                        this.pacmandata.sprite.scale.x = this.pacmandata.defscale.x
+                    };
+                    if (this.pacmandata.right()) {
+                        this.pacmandata.pos.x += this.pacmandata.speed;
+                        this.pacmandata.sprite.scale.x = -this.pacmandata.defscale.x
+                    };
+                    this.pacmandata.sprite.position = this.pacmandata.pos;
+                    for (var i = 0; i < this.pacmandata.fluff.length; i++) {
+                        if (this.pacmandata.fluff[i]){
+                            this.pacmandata.fluff[i].rotation += Math.random();
+                            if(vectorDist(this.pacmandata.fluff[i].position, this.pacmandata.pos) < 60) {
+                                cMiddle.removeChild(this.pacmandata.fluff[i])
+                                this.pacmandata.fluff[i]=undefined;
+                                this.pacmandata.score += 1;
+                            }
+                        }
+                    }
+                    this.score.text = this.pacmandata.score;
+                    this.score.style.fill = "#FFFFFF";
+                    this.doc["score"] = this.score;
+                    cGui.addChild(this.score);
+                    if (this.pacmandata.score >= this.pacmandata.num) {
+                        window.clearInterval(this.pacmandata.loop);
+                        d = (self) => {window.setTimeout(self.nextState, 1000)};
+                        d(this);
+                    }
+                }
+                self = this
+                this.pacmandata.loop = window.setInterval(()=>{self.pacmandata.logic()}, 20);
+            }
+        },
+        // STATE 006 //
+        this.nextState, // skip
+        // STATE 007 //
+        this.nextState, // skip
+        // STATE 008 //
+        diasStateGenerator([s008s]),    // go ahead
+        // STATE 009 //
+        () => {},
+        // STATE 010 //
+        diasStateGenerator([
+            s010s1,             // sock gets grabbed by monster
+            s010s2]),
+        // STATE 011 //
+        () => {
+            // TODO impl ENDING
+        },
+        // STATE 012 //
+        diasStateGenerator([s012s1,
+            s012s2,             // monster turns into sockbert
+            s012s3,             // he says "tanks" // no typo
+            s012s4])
     ];
 
     this.run = this.funcarray[this.number];
