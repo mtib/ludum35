@@ -144,29 +144,21 @@ const s004s8 = "./scenes/004/sewer8.jpg";
 const s004s9 = "./scenes/004/sewer9.jpg";
 const s004s10 = "./scenes/004/sewer10.jpg";
 
-function uritom(name) {
-    return ['scenes/'+name+'.ogg','scenes/'+name+'.mp3']
-}
-
-const introMusic = new Howl({
-    src: uritom("000/SockventureIntro"),
-    loop: true,
-    volume: 0.4,
-});
-
-const sceneMusic = [ // for the cool kids!
-    introMusic,
-    new Howl({
-        src: uritom("001/SockventureHand"),
-        loop: true,
-        volume: 0.4,
-    }),
-    introMusic,
-    new Howl({
-        src: uritom("003/SockventureSewerFall"),
+function newHowl(name) {
+    return new Howl({
+        src: ['scenes/'+name+'.ogg','scenes/'+name+'.mp3'],
         loop: true,
         volume: 0.4,
     })
+}
+
+const introMusic = newHowl("000/SockventureIntro");
+
+const sceneMusic = [ // for the cool kids!
+    introMusic,
+    newHowl("001/SockventureHand"),
+    introMusic,
+    newHowl("003/SockventureSewerFall")
 ];
 
 function Game1Sock() {
