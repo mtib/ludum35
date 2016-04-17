@@ -186,7 +186,9 @@ const sceneMusic = [ // for the cool kids!
     false,
     newHowl("009/SockventureSewerJump"),
     introMusic,
-    newHowl("011/SockventureBoss")
+    newHowl("011/SockventureBoss"),
+    false,
+    newHowl("009/SockventureSewerJump"),
 ];
 
 function Game1Sock() {
