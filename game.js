@@ -511,12 +511,82 @@ function State() {
     }
     this.pacmanGamefunc = () => {
         if (this.switched) {
-            this.infotext.warn("Use [WASD] to collect fluff");
+            this.pacmandata = {};
+            this.pacmandata.down = () => {return sKey.isDown || downArrow.isDown};
+            this.pacmandata.up = () => {return wKey.isDown || upArrow.isDown};
+            this.pacmandata.left = () => {return aKey.isDown || leftArrow.isDown};
+            this.pacmandata.right = () => {return dKey.isDown || rightArrow.isDown};
+            this.pacmandata.warn = "Use [WASD] to collect fluff";
+            this.infotext.warn(this.pacmandata.warn);
             this.doc["background"] = PIXI.Sprite.fromImage(s005bg);
             cBack.addChild(this.doc["background"]);
             this.switched = false;
+            this.pacmandata.pos = {x:WIDTH/2, y:HEIGHT/2, or: 0};
+            this.pacmandata.sprite = PIXI.Sprite.fromImage(ssock);
+            this.doc["pacmansock"] = this.pacmandata.sprite;
+            cFront.addChild(this.doc["pacmansock"]);
+            this.pacmandata.defscale = {x:0.1, y:0.1};
+            this.pacmandata.sprite.scale = {x:this.pacmandata.defscale.x, y:this.pacmandata.defscale.y};
+            this.pacmandata.sprite.anchor = relcenter;
+            this.pacmandata.sprite.pivot = relcenter;
+            this.pacmandata.fluff = []
+            this.pacmandata.num = 50;
+            this.pacmandata.score = 0;
+            this.pacmandata.speed = 10;
+            for (var i = 0; i < this.pacmandata.num; i++) {
+                var margin = 100;
+                var vec = {};
+                var found = false
+                while (!found){
+                    vec.x = Math.random() * (WIDTH - 2 * margin) + margin;
+                    vec.y = Math.random() * (HEIGHT - 2 * margin) + margin;
+                    if (vectorDist(this.pacmandata.pos, vec) > 70) {
+                        found = true;
+                    }
+                }
+                var t = PIXI.Sprite.fromImage(s005fl);
+                t.anchor = relcenter;
+                t.pivot = relcenter;
+                t.position = vec;
+                t.scale = {x:0.1, y:0.1};
+                this.doc["fluff"+i] = t;
+                this.pacmandata.fluff.push(this.doc["fluff"+i]);
+            }
+            for (var i = 0; i < this.pacmandata.fluff.length; i++) {
+                cMiddle.addChild(this.pacmandata.fluff[i]);
+            }
+            this.pacmandata.logic = () => {
+                if (this.pacmandata.down())  this.pacmandata.pos.y += 5;
+                if (this.pacmandata.up())    this.pacmandata.pos.y -= 5;
+                if (this.pacmandata.left())  {
+                    this.pacmandata.pos.x -= this.pacmandata.speed;
+                    this.pacmandata.sprite.scale.x = this.pacmandata.defscale.x
+                };
+                if (this.pacmandata.right()) {
+                    this.pacmandata.pos.x += this.pacmandata.speed;
+                    this.pacmandata.sprite.scale.x = -this.pacmandata.defscale.x
+                };
+                this.pacmandata.sprite.position = this.pacmandata.pos;
+                for (var i = 0; i < this.pacmandata.fluff.length; i++) {
+                    if (this.pacmandata.fluff[i] && vectorDist(this.pacmandata.fluff[i].position, this.pacmandata.pos) < 60) {
+                        cMiddle.removeChild(this.pacmandata.fluff[i])
+                        this.pacmandata.fluff[i]=undefined;
+                        this.pacmandata.score += 1;
+                    }
+                }
+                this.score.text = this.pacmandata.score;
+                this.score.style.fill = "#FFFFFF";
+                this.doc["score"] = this.score;
+                cGui.addChild(this.score);
+                if (this.pacmandata.score >= this.pacmandata.num) {
+                    window.clearInterval(this.pacmandata.loop);
+                    d = (self) => {window.setTimeout(self.nextState, 1000)};
+                    d(this);
+                }
+            }
+            self = this
+            this.pacmandata.loop = window.setInterval(()=>{self.pacmandata.logic()}, 20);
         }
-
     }
     this.winjump = diasStateGenerator([s010s1, s010s2]);
     this.bossscene = () => {
