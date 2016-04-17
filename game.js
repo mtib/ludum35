@@ -131,6 +131,10 @@ const s003ek1 = "./scenes/003/eklig1.png";
 const s003ek2 = "./scenes/003/eklig2.png";
 const s003ek3 = "./scenes/003/eklig3.png";
 
+function uritom(name) {
+    return ['scenes/'+name+'.ogg','scenes/'+name+'.mp3']
+}
+
 const sceneMusic = [ // for the cool kids!
     new Howl({
         src: ['scenes/000/SockventureIntro.ogg'],
