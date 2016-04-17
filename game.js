@@ -160,7 +160,9 @@ const s010s2 = resourc("010/winjump2.jpg");
 
 const s011boss = resourc("011/boss.png");
 
-const s009 =
+const s012s1 = resourc("012/boss.bg1.jpg");
+const s012s2 = resourc("012/boss.bg2.jpg");
+const s012s3 = resourc("012/boss.bg3.jpg");
 
 newHowl = (name) => new Howl({
     src: ['scenes/'+name+'.ogg','scenes/'+name+'.mp3'],
@@ -324,13 +326,13 @@ function Game1Hand(startpos, follow) {
     this.release = () => this.die();
     this.delta = () => {return {x: this.sopen.position.x - this.aim.x, y: this.sopen.position.y - this.aim.y}};
     this.decideReturn = (disttoaim) => {
-        if ( disttoaim < 20  && !this.return) {
+        if ( disttoaim < 30  && !this.return) {
             this.return = true;
             this.friction = -40;
         }
 
         var dist = vectorDist(gamestate.playerpos(), this.sopen.position);
-        if (dist < 50) {
+        if (dist < 70) {
             this.grab();
             cMiddle.removeChild(gamestate.doc["gamesock"].sprite);
             this.return = true;
@@ -510,7 +512,7 @@ function State() {
                     }
                     self.doc[Date.now()] = new Game1Hand(pos);
                 },
-            2300);
+            1500);
             this.handSpawner = this.spawnHands(this);
 
             this.switched = false;
@@ -589,6 +591,20 @@ stage.addChild(cMiddle);
 stage.addChild(cFront);
 stage.addChild(cGui);
 
+
+function setup(){
+    // Do setup here
+    // Easteregg: eyes!¬
+    renderStage();
+}
+
+// Request Animation Frame
+function renderStage(){
+    requestAnimationFrame(renderStage);
+    gamestate.run()
+    renderer.render(stage);
+}
+
 PIXI.loader
     .add(s000bed1)
     .add(s000bed2)
@@ -624,26 +640,7 @@ PIXI.loader
     .add(s010s1)
     .add(s010s2)
     .add(s011boss)
+    .add(s012s1)
+    .add(s012s2)
+    .add(s012s3)
     .load(setup);
-
-function setup(){
-    // Do setup here
-    // Easteregg: eyes!¬
-    renderStage();
-}
-
-// Request Animation Frame
-function renderStage(){
-    requestAnimationFrame(renderStage);
-    gameLoop();
-    renderer.render(stage);
-}
-
-// Called before rendering
-function gameLoop(){
-    // after doing logic:
-    gamestate.run()
-}
-
-// start game
-setup();
