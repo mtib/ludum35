@@ -268,6 +268,7 @@ function Game3Sock(blobTexes) {
         cMiddle.removeChild(this.sprite)
         window.clearInterval(this.blobSpawner);
         for (var b in this.blobs){
+            this.blobs[b].die();
             delete this.blobs[b];
         }
     };
@@ -581,6 +582,7 @@ function State() {
 
     this.fallgame = () => {
         if (this.switched) {
+            this.infotext.warn("Avoid the blobs!");
             this.starttime = Date.now();
             this.doc.distanceFallen = 0;
             this.doc.bgs = new FallingBackground();
@@ -599,7 +601,7 @@ function State() {
 
         this.doc.distanceFallen += 0.01;
 
-        if(this.doc.distanceFallen>60){
+        if(this.doc.distanceFallen>50){
             this.blobsHit = this.doc.gamesock.blobsHit;
             this.nextState();
         }
