@@ -160,7 +160,10 @@ const s010s2 = resourc("010/winjump2.jpg");
 
 const s011boss = resourc("011/boss.png");
 
-const s009 =
+const s012s1 = resourc("012/boss.bg1.jpg");
+const s012s2 = resourc("012/boss.bg2.jpg");
+const s012s3 = resourc("012/boss.bg3.jpg");
+const s012s4 = resourc("012/boss.bg4.jpg");
 
 newHowl = (name) => new Howl({
     src: ['scenes/'+name+'.ogg','scenes/'+name+'.mp3'],
@@ -180,7 +183,7 @@ const sceneMusic = [ // for the cool kids!
 function Game1Sock() {
     self = this;
     size = 128 // Pixel
-    speed = 3 // Pixel / Frame
+    speed = 10 // Pixel / Frame
     this.sprite = new PIXI.Sprite.fromImage(ssock);
     this.sprite.anchor = relcenter;
     this.sprite.width = size;
@@ -287,6 +290,8 @@ function Blob(blobs) {
 
 function FallingBackground() {
     this.bgs = [PIXI.Sprite.fromImage(s003bg), PIXI.Sprite.fromImage(s003bg)];
+    this.bgs[1].scale.y *= -1;
+    this.bgs[1].anchor.y = 1;
     const H = this.bgs[0].height;
 
     this.bgs[1].y = H;
@@ -363,13 +368,13 @@ function Game1Hand(startpos, follow) {
     this.release = () => this.die();
     this.delta = () => {return {x: this.sopen.position.x - this.aim.x, y: this.sopen.position.y - this.aim.y}};
     this.decideReturn = (disttoaim) => {
-        if ( disttoaim < 20  && !this.return) {
+        if ( disttoaim < 30  && !this.return) {
             this.return = true;
             this.friction = -40;
         }
 
         var dist = vectorDist(gamestate.playerpos(), this.sopen.position);
-        if (dist < 50) {
+        if (dist < 70) {
             this.grab();
             cMiddle.removeChild(gamestate.doc["gamesock"].sprite);
             this.return = true;
@@ -417,6 +422,11 @@ function State() {
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
     this.infotext.position = {x: WIDTH/2, y: HEIGHT/2};
     this.infotext.anchor = relcenter;
+    this.infotext.warn = (msg) => {
+        this.infotext.text=msg;
+        f=(s)=>{window.setTimeout(function(){s.text=""}, 2000)};
+        f(this.infotext)
+    }
 
     this.doc = {}; // DestroyOnChange
     this.number = 0;
@@ -467,9 +477,7 @@ function State() {
     }
     diasStateGenerator = (backgrounds) => () => {
         if (this.switched){
-            this.infotext.text = "Press <Enter> to proceed";
-            hide = (self) => { window.setTimeout(() => {self.infotext.text = 0}, 3000)};
-            hide(this);
+            this.infotext.warn("Press <Enter> to proceed")
             this.doc["dias"] = 0;
             for (var bg in backgrounds){
                 this.doc[bg] = PIXI.Sprite.fromImage(backgrounds[bg]);
@@ -501,7 +509,13 @@ function State() {
         this.nextState() // TODO impl game
     }
     this.pacmanGamefunc = () => {
-        this.nextState() // TODO impl game
+        if (this.switched) {
+            this.infotext.warn("Use [WASD] to collect fluff");
+            this.doc["background"] = PIXI.Sprite.fromImage(s005bg);
+            cBack.addChild(this.doc["background"]);
+            this.switched = false;
+        }
+
     }
     this.winjump = diasStateGenerator([s010s1, s010s2]);
     this.bossscene = () => {
@@ -510,7 +524,7 @@ function State() {
     this.switched = true;
     this.underTheBed = function(){
         if (this.switched) {
-            this.infotext.text = "[WASD] to move";
+            this.infotext.warn("Use [WASD] to move");
             this.starttime = Date.now();
             this.doc["points"] = this.score;
             this.doc["s001bg"] = PIXI.Sprite.fromImage(s001bg);
@@ -522,10 +536,6 @@ function State() {
             cBack.addChild(this.doc["s001bg"]);
             cGui.addChild(this.doc["points"]);
             this.doc["gamesock"] = new Game1Sock();
-
-            hidetext = function(that){
-                window.setTimeout(function(){that.infotext.text = ""}, 4000);
-            }(this);
 
             this.spawnHands = (self) => window.setInterval(
                 () => {
@@ -550,7 +560,7 @@ function State() {
                     }
                     self.doc[Date.now()] = new Game1Hand(pos);
                 },
-            2300);
+            1500);
             this.handSpawner = this.spawnHands(this);
 
             this.switched = false;
@@ -608,6 +618,7 @@ function State() {
         this.jumpgame,          // 009
         this.winjump,           // 010
         this.bossscene,         // 011
+        diasStateGenerator([s012s1, s012s2, s012s3, s012s4])
     ];
 
     this.run = this.funcarray[this.number];
@@ -630,6 +641,20 @@ stage.addChild(cBack);
 stage.addChild(cMiddle);
 stage.addChild(cFront);
 stage.addChild(cGui);
+
+
+function setup(){
+    // Do setup here
+    // Easteregg: eyes!¬
+    renderStage();
+}
+
+// Request Animation Frame
+function renderStage(){
+    requestAnimationFrame(renderStage);
+    gamestate.run()
+    renderer.render(stage);
+}
 
 PIXI.loader
     .add(s000bed1)
@@ -666,26 +691,14 @@ PIXI.loader
     .add(s010s1)
     .add(s010s2)
     .add(s011boss)
+    .add(s012s1)
+    .add(s012s2)
+    .add(s012s3)
     .load(setup);
 
-function setup(){
-    // Do setup here
-    // Easteregg: eyes!¬
-    renderStage();
+// DEBUG STUFF
+jmp = (state) => {
+    for (var i = 0; i < state; i++) {
+        gamestate.nextState();
+    }
 }
-
-// Request Animation Frame
-function renderStage(){
-    requestAnimationFrame(renderStage);
-    gameLoop();
-    renderer.render(stage);
-}
-
-// Called before rendering
-function gameLoop(){
-    // after doing logic:
-    gamestate.run()
-}
-
-// start game
-setup();
