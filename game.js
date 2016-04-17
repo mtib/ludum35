@@ -357,31 +357,29 @@ function State() {
         this.debugStateText.text = this.number;
         this.run = this.funcarray[this.number];
     }
-    diasStateGenerator = (backgrounds) => {
-        return () => {
-            if (this.switched){
-                this.infotext.text = "Press <Enter> to proceed"
-                this.doc["dias"] = 0;
-                for (var bg in backgrounds){
-                    this.doc[bg] = PIXI.Sprite.fromImage(backgrounds[bg]);
-                    this.doc[bg].width  = WIDTH;
-                    this.doc[bg].height = HEIGHT;
-                }
-
-                cBack.addChild(this.doc[0]);
-                self = this
-                enterKey.press = function(){
-                    if (self.doc["dias"] == backgrounds.length - 1){
-                        self.nextState();
-                        enterKey.press = undefined;
-                    }else{
-                        cBack.removeChild(self.doc[self.doc["dias"]++]);
-                        cBack.addChild(self.doc[self.doc["dias"]]);
-                    }
-                }
-
-                this.switched = false;
+    diasStateGenerator = (backgrounds) => () => {
+        if (this.switched){
+            this.infotext.text = "Press <Enter> to proceed"
+            this.doc["dias"] = 0;
+            for (var bg in backgrounds){
+                this.doc[bg] = PIXI.Sprite.fromImage(backgrounds[bg]);
+                this.doc[bg].width  = WIDTH;
+                this.doc[bg].height = HEIGHT;
             }
+
+            cBack.addChild(this.doc[0]);
+            self = this
+            enterKey.press = () => {
+                if (self.doc["dias"] == backgrounds.length - 1){
+                    self.nextState();
+                    enterKey.press = undefined;
+                }else{
+                    cBack.removeChild(self.doc[self.doc["dias"]++]);
+                    cBack.addChild(self.doc[self.doc["dias"]]);
+                }
+            }
+
+            this.switched = false;
         }
     }
 
