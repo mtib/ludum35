@@ -818,7 +818,7 @@ function State() {
             if (this.switched) {
                 this.doc.background = new PIXI.Sprite.fromImage(s012s1);
                 this.doc.background.width = WIDTH;
-                this.doc.background.height = HEIGTH;
+                this.doc.background.height = HEIGHT;
                 cBack.addChild(this.doc.background);
                 var ownHealth = {
                     font: "50px monospace",
@@ -851,7 +851,7 @@ function State() {
                 this.display.boss.anchor = relcenter;
                 this.doc.so.position = {x: 100, y:600};
                 this.doc.so.anchor = relcenter;
-                this.doc.so.scale = {x:.2,y:.2};
+                this.doc.so.scale = {x:-.2,y:.2};
 
                 cGui.addChild(this.display.sock);
                 cGui.addChild(this.display.boss);
@@ -866,17 +866,23 @@ function State() {
                 this.sockAttack = () => {this.bossHealth -= Math.random() * 60 + 20;   this.updateText()};
                 this.bossAttack = () => {this.health -= Math.random() * 20 + 30;       this.updateText()};
             }
-            if (Date.now() - this.time > 800) {
+            this.fight = () => {
                 if (this.yourTurn) {
                     this.sockAttack();
                 } else {
                     this.bossAttack();
                 }
-
+                if ( this.bossHealth < 0)  {
+                    // you win
+                    window.clearInterval(this.fightloop);
+                } else if ( this.health < 0 ) {
+                    // you lose
+                    window.clearInterval(this.fightloop);
+                }
                 this.yourTurn = !this.yourTurn;
-                this.time = Date.now();
             }
-
+            self = this;
+            this.fightloop = window.setInterval(()=>{self.fight()},800);
         },
         // STATE 012 //
         diasStateGenerator([s012s1,
