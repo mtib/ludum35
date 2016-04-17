@@ -92,11 +92,12 @@ var cGui = new PIXI.Container();
 
 // Config goes here:
 const fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
-const debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
+const debugConfig = {font: "20px Arial", fill: "#FFF", align: "left"};
 const pointsConfig = {font: "50px monospace", fill: "#000000", align: "right", dropShadow: true, dropShadowColor: "#FF0000"};
 const infoConfig = {font: "60px Arial", fill: "#FFFFFF", align: "center", dropShadow: true, dropShadowColor: "#000000", dropShadowDistance: 2};
 
 const relcenter = {x:0.5,y:0.5};
+const abscenter = {x:WIDTH/2,y:HEIGHT/2};
 const enterKey = keyboard(13);
 
 const leftArrow = keyboard(37);
@@ -196,7 +197,7 @@ function Game1Sock() {
     this.sprite.anchor = relcenter;
     this.sprite.width = size;
     this.sprite.height = size;
-    this.sprite.position = {x: WIDTH*0.5, y: HEIGHT*0.5};
+    this.sprite.position = abscenter;
     this.die = () => cMiddle.removeChild(this.sprite);
     this.move = () => {
         delta = {x:0, y:0};
@@ -508,7 +509,7 @@ function State() {
     this.blobsHit;
 
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
-    this.infotext.position = {x: WIDTH/2, y: HEIGHT/2};
+    this.infotext.position = abscenter;
     this.infotext.anchor = relcenter;
     this.infotext.warn = (msg) => {
         this.infotext.text=msg;
@@ -714,7 +715,7 @@ function State() {
                 this.doc["background"] = PIXI.Sprite.fromImage(s005bg);
                 cBack.addChild(this.doc["background"]);
                 this.switched = false;
-                this.pacmandata.pos = {x:WIDTH/2, y:HEIGHT/2, or: 0};
+                this.pacmandata.pos = abscenter;
                 this.pacmandata.sprite = PIXI.Sprite.fromImage(ssock);
                 this.doc["pacmansock"] = this.pacmandata.sprite;
                 cFront.addChild(this.doc["pacmansock"]);
@@ -805,7 +806,7 @@ function State() {
             this.doc.points.text = Math.round(this.doc.gamesock.height/33);
             this.doc.bgs.update(this.doc.gamesock.dltaHt);
             this.doc.gamesock.update()
-            if (this.doc.gamesock.height > 165000){
+            if (this.doc.gamesock.height > 0x28488){
                 this.nextState();
             }else if (this.doc.gamesock.height < -2000){
                 this.health /= 2;
@@ -902,6 +903,36 @@ function State() {
             s012s3,             // he says "tanks" // no typo
             s012s4]),
         // STATE 013 //
+        () => {
+            if (this.switched){
+                this.switched = false;
+                var msg = new PIXI.Text("Thanks for Playing!", {
+                    font: "120px Arial",
+                    fill: "#FFF",
+                    align:"center",
+                    dropShadow: true,
+                    dropShadowColor: "#FF0000",
+                    dropShadowDistance: 2,
+                });
+                msg.anchor = relcenter;
+                msg.position = {x: WIDTH/2, y:HEIGHT/2};
+                cGui.addChild(msg);
+                renderer.backgroundColor = 0x001;
+                this.col = (x) => {
+                    factor = 255 / Math.sqrt(1.5);
+                    var red = Math.sqrt(Math.cos(x+(Math.PI+1)/2)+1/2) *faktor;
+                    var green = Math.sqrt(Math.cos(x)+1/2) *faktor;
+                    var blue = Math.sqrt(Math.cos(x-(Math.PI+1)/2)+1/2) *faktor;
+
+                }
+                window.setInterval(()=>{
+                    v = renderer.backgroundColor;
+                    v = v << 1;
+                    v += v % 0xFFF
+                    renderer.backgroundColor = v;
+                }, 500);
+            }
+        }
     ];
 
     this.run = this.funcarray[this.number];
