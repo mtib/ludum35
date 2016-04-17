@@ -93,8 +93,8 @@ var cGui = new PIXI.Container();
 // Config goes here:
 const fontConfig = {font: "30px 'Arial'", fill: "#000000", align: "left"};
 const debugConfig = {font: "20px 'Fira Code',monospace,sans-serif", fill: "#FF0000", align: "left"};
-const pointsConfig = {font: "20px monospace", fill: "#FF00FF", align: "right"};
-const infoConfig = {font: "60px Arial", fill: "#FFFFFF", align: "center", dropShadow: true, dropShadowColor: "#000000"};
+const pointsConfig = {font: "50px monospace", fill: "#000000", align: "right", dropShadow: true, dropShadowColor: "#FF0000"};
+const infoConfig = {font: "60px Arial", fill: "#FFFFFF", align: "center", dropShadow: true, dropShadowColor: "#000000", dropShadowDistance: 2};
 
 const relcenter = {x:0.5,y:0.5};
 const enterKey = keyboard(13);
@@ -486,6 +486,7 @@ PIXI.loader
     .add(s003ek1)
     .add(s003ek2)
     .add(s003ek3)
+    .add(s003bg)
     .add(s004s1)
     .add(s004s2)
     .add(s004s3)
