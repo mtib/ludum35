@@ -183,7 +183,7 @@ const sceneMusic = [ // for the cool kids!
 function Game1Sock() {
     self = this;
     size = 128 // Pixel
-    speed = 3 // Pixel / Frame
+    speed = 10 // Pixel / Frame
     this.sprite = new PIXI.Sprite.fromImage(ssock);
     this.sprite.anchor = relcenter;
     this.sprite.width = size;
@@ -251,6 +251,8 @@ function Game3Sock() {
 
 function FallingBackground() {
     this.bgs = [PIXI.Sprite.fromImage(s003bg), PIXI.Sprite.fromImage(s003bg)];
+    this.bgs[1].scale.y *= -1;
+    this.bgs[1].anchor.y = 1;
     const H = this.bgs[0].height;
 
     this.bgs[1].y = H;
