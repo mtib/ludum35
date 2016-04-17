@@ -725,6 +725,8 @@ function State() {
         () => {
             if (this.switched) {
                 this.doc.background = new PIXI.Sprite.fromImage(s012s1);
+                this.doc.background.width = WIDTH;
+                this.doc.background.height = HEIGTH;
                 cBack.addChild(this.doc.background);
                 var ownHealth = {
                     font: "50px monospace",
@@ -756,6 +758,8 @@ function State() {
                 this.display.boss.position = {x:WIDTH/2, y: 100};
                 this.display.boss.anchor = relcenter;
                 this.doc.so.position = {x: 100, y:600};
+                this.doc.so.anchor = relcenter;
+                this.doc.so.scale = {x:.2,y:.2};
 
                 cGui.addChild(this.display.sock);
                 cGui.addChild(this.display.boss);
