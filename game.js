@@ -523,7 +523,7 @@ function State() {
         // TODO impl ENDING
     }
     this.switched = true;
-    this.underTheBed = function(){
+    this.underTheBed = () => {
         if (this.switched) {
             this.infotext.warn("Use [WASD] to move");
             this.starttime = Date.now();
