@@ -109,40 +109,42 @@ const wKey = keyboard(87);
 const dKey = keyboard(68);
 const sKey = keyboard(83);
 
+resourc = (name) => "./scenes/"+name;
+
 // Images for Intro Diashow
-const s000bed1 = "./scenes/000/bed.pic1.jpg";
-const s000bed2 = "./scenes/000/bed.pic2.jpg";
-const s000bed3 = "./scenes/000/bed.pic3.jpg";
+const s000bed1 = resourc("000/bed.pic1.jpg");
+const s000bed2 = resourc("000/bed.pic2.jpg");
+const s000bed3 = resourc("000/bed.pic3.jpg");
 
 // First Game
-const s001bg = "./scenes/001/background.jpg"; // background for game #1
-const ssock = "./scenes/001/sock.png"; // normal sock, for use in all? scenes
-const s001armo = "./scenes/001/arm.open.png"; // o = open
-const s001armg = "./scenes/001/arm.sock.png"; // g = grabbed
+const s001bg = resourc("001/background.jpg"); // background for game #1
+const ssock = resourc("001/sock.png"); // normal sock, for use in all? scenes
+const s001armo = resourc("001/arm.open.png"); // o = open
+const s001armg = resourc("001/arm.sock.png"); // g = grabbed
 
 // Second Story Line Diashow
-const s002wm1 = "./scenes/002/waschmaschine1.jpg";
-const s002wm2 = "./scenes/002/waschmaschine2.jpg";
-const s002wm3 = "./scenes/002/waschmaschine3.jpg";
-const s002wm4 = "./scenes/002/waschmaschine4.jpg";
+const s002wm1 = resourc("002/waschmaschine1.jpg");
+const s002wm2 = resourc("002/waschmaschine2.jpg");
+const s002wm3 = resourc("002/waschmaschine3.jpg");
+const s002wm4 = resourc("002/waschmaschine4.jpg");
 
 // BLOBS for Falling Game
-const s003ek1 = "./scenes/003/eklig1.png";
-const s003ek2 = "./scenes/003/eklig2.png";
-const s003ek3 = "./scenes/003/eklig3.png";
-const s003bg = "./scenes/003/falling.bg.jpg";
+const s003ek1 = resourc("003/eklig1.png");
+const s003ek2 = resourc("003/eklig2.png");
+const s003ek3 = resourc("003/eklig3.png");
+const s003bg = resourc("003/falling.bg.jpg");
 
 // Third Story Slideshow
-const s004s1 = "./scenes/004/sewer1.jpg";
-const s004s2 = "./scenes/004/sewer2.jpg";
-const s004s3 = "./scenes/004/sewer3.jpg";
-const s004s4 = "./scenes/004/sewer4.jpg";
-const s004s5 = "./scenes/004/sewer5.jpg";
-const s004s6 = "./scenes/004/sewer6.jpg";
-const s004s7 = "./scenes/004/sewer7.jpg";
-const s004s8 = "./scenes/004/sewer8.jpg";
-const s004s9 = "./scenes/004/sewer9.jpg";
-const s004s10 = "./scenes/004/sewer10.jpg";
+const s004s1 = resourc("004/sewer1.jpg");
+const s004s2 = resourc("004/sewer2.jpg");
+const s004s3 = resourc("004/sewer3.jpg");
+const s004s4 = resourc("004/sewer4.jpg");
+const s004s5 = resourc("004/sewer5.jpg");
+const s004s6 = resourc("004/sewer6.jpg");
+const s004s7 = resourc("004/sewer7.jpg");
+const s004s8 = resourc("004/sewer8.jpg");
+const s004s9 = resourc("004/sewer9.jpg");
+const s004s10 = resourc("004/sewer10.jpg");
 
 newHowl = (name) => new Howl({
     src: ['scenes/'+name+'.ogg','scenes/'+name+'.mp3'],
