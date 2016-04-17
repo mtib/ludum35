@@ -317,7 +317,6 @@ function Game1Hand(startpos, follow) {
         this.sgrab.scale = this.sopen.scale;
         this.sgrab.rotation = this.sopen.rotation;
         this.grabbed = true;
-        console.log("grabbed...");
         cFront.removeChild(this.sopen);
         cFront.addChild(this.sgrab);
     }
@@ -534,19 +533,24 @@ function State() {
         if (this.switched) {
             this.starttime = Date.now();
             this.distanceFallen = 0;
+            this.blobsHit;
             this.doc.bgs = new FallingBackground();
-            this.doc.ek1 = PIXI.Sprite.fromImage(s003ek1);
-            this.doc.ek2 = PIXI.Sprite.fromImage(s003ek2);
-            this.doc.ek3 = PIXI.Sprite.fromImage(s003ek3);
+            this.doc.blobs = [
+                PIXI.Sprite.fromImage(s003ek1), PIXI.Sprite.fromImage(s003ek2), PIXI.Sprite.fromImage(s003ek3)
+            ];
+            this.doc.points = this.score;
+            this.doc.points.text = "0";
 
             this.doc.gamesock = new Game3Sock();
 
+            cGui.addChild(this.doc.points);
             this.switched = false;
         }
+        this.doc.points.text = Math.floor(this.distanceFallen);
         this.doc.bgs.update()
         this.doc.gamesock.update()
 
-        this.distanceFallen += 3;
+        this.distanceFallen += 0.01;
     };
 
     this.funcarray = [
