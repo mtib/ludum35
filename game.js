@@ -556,8 +556,8 @@ function State() {
                 cMiddle.addChild(this.pacmandata.fluff[i]);
             }
             this.pacmandata.logic = () => {
-                if (this.pacmandata.down())  this.pacmandata.pos.y += 5;
-                if (this.pacmandata.up())    this.pacmandata.pos.y -= 5;
+                if (this.pacmandata.down())  this.pacmandata.pos.y += this.pacmandata.speed;
+                if (this.pacmandata.up())    this.pacmandata.pos.y -= this.pacmandata.speed;
                 if (this.pacmandata.left())  {
                     this.pacmandata.pos.x -= this.pacmandata.speed;
                     this.pacmandata.sprite.scale.x = this.pacmandata.defscale.x
@@ -568,10 +568,13 @@ function State() {
                 };
                 this.pacmandata.sprite.position = this.pacmandata.pos;
                 for (var i = 0; i < this.pacmandata.fluff.length; i++) {
-                    if (this.pacmandata.fluff[i] && vectorDist(this.pacmandata.fluff[i].position, this.pacmandata.pos) < 60) {
-                        cMiddle.removeChild(this.pacmandata.fluff[i])
-                        this.pacmandata.fluff[i]=undefined;
-                        this.pacmandata.score += 1;
+                    if (this.pacmandata.fluff[i]){
+                        this.pacmandata.fluff[i].rotation += Math.random();
+                        if(vectorDist(this.pacmandata.fluff[i].position, this.pacmandata.pos) < 60) {
+                            cMiddle.removeChild(this.pacmandata.fluff[i])
+                            this.pacmandata.fluff[i]=undefined;
+                            this.pacmandata.score += 1;
+                        }
                     }
                 }
                 this.score.text = this.pacmandata.score;
