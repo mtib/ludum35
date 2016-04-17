@@ -476,12 +476,18 @@ function State() {
         }
         enterKey.press = undefined;
 
-        if (sceneMusic[this.number+1]){
-            sceneMusic[this.number++].stop();
+        this.number++;
+        if (sceneMusic[this.number]) {
+            // Make sure the music is changed
+            for (var i = this.number-1; i >= 0; i--)
+                if(sceneMusic[i]){
+                    sceneMusic[i].stop();
+                    break;
+                }
+
             sceneMusic[this.number].play();
-        } else {
-            this.number+=1;
-        }
+        }else
+            console.log("Continuing music!")
 
         this.switched = true;
         this.debugText.text = dbgTxt + this.number;
@@ -624,10 +630,10 @@ function State() {
         () => {
             if (this.switched) {
                 this.pacmandata = {};
-                this.pacmandata.down = () => {return sKey.isDown || downArrow.isDown};
-                this.pacmandata.up = () => {return wKey.isDown || upArrow.isDown};
-                this.pacmandata.left = () => {return aKey.isDown || leftArrow.isDown};
-                this.pacmandata.right = () => {return dKey.isDown || rightArrow.isDown};
+                this.pacmandata.down = () => sKey.isDown || downArrow.isDown;
+                this.pacmandata.up = () => wKey.isDown || upArrow.isDown;
+                this.pacmandata.left = () => aKey.isDown || leftArrow.isDown;
+                this.pacmandata.right = () => dKey.isDown || rightArrow.isDown;
                 this.pacmandata.warn = "Use [WASD] to collect fluff";
                 this.infotext.warn(this.pacmandata.warn);
                 this.doc["background"] = PIXI.Sprite.fromImage(s005bg);
