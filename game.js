@@ -146,6 +146,22 @@ const s004s8 = resourc("004/sewer8.jpg");
 const s004s9 = resourc("004/sewer9.jpg");
 const s004s10 = resourc("004/sewer10.jpg");
 
+const s005fl = resourc("005/fluse.png");
+const s005bg = resourc("005/snake.bg.jpg");
+const s005pac1 = resourc("005/sock.pacman1.png");
+const s005pac2 = resourc("005/sock.pacman2.png");
+
+const s008s = resourc("008/pipehome.jpg");
+
+const s009so = resourc("009/soap.png");
+
+const s010s1 = resourc("010/winjump1.jpg");
+const s010s2 = resourc("010/winjump2.jpg");
+
+const s011boss = resourc("011/boss.png");
+
+const s009 =
+
 newHowl = (name) => new Howl({
     src: ['scenes/'+name+'.ogg','scenes/'+name+'.mp3'],
     loop: true,
@@ -409,7 +425,9 @@ function State() {
     }
     diasStateGenerator = (backgrounds) => () => {
         if (this.switched){
-            this.infotext.text = "Press <Enter> to proceed"
+            this.infotext.text = "Press <Enter> to proceed";
+            hide = (self) => { window.setTimeout(() => {self.infotext.text = 0}, 3000)};
+            hide(this);
             this.doc["dias"] = 0;
             for (var bg in backgrounds){
                 this.doc[bg] = PIXI.Sprite.fromImage(backgrounds[bg]);
@@ -436,6 +454,17 @@ function State() {
     this.introfunc = diasStateGenerator([s000bed1, s000bed2, s000bed3]);
     this.preFallfunc = diasStateGenerator([s002wm1, s002wm2, s002wm3, s002wm4]);
     this.postFallfunc = diasStateGenerator([s004s1, s004s2, s004s3, s004s4, s004s5, s004s6, s004s7, s004s8, s004s9, s004s10]);
+    this.preJump = diasStateGenerator([s008s])
+    this.jumpgame = () => {
+        this.nextState() // TODO impl game
+    }
+    this.pacmanGamefunc = () => {
+        this.nextState() // TODO impl game
+    }
+    this.winjump = diasStateGenerator([s010s1, s010s2]);
+    this.bossscene = () => {
+        // TODO impl ENDING
+    }
     this.switched = true;
     this.underTheBed = function(){
         if (this.switched) {
@@ -517,10 +546,24 @@ function State() {
         this.distanceFallen += 3;
     };
 
-    this.funcarray = [this.introfunc, this.underTheBed, this.preFallfunc, this.fallgame, this.postFallfunc];
+    this.funcarray = [
+        this.introfunc,         // 000
+        this.underTheBed,       // 001
+        this.preFallfunc,       // 002
+        this.fallgame,          // 003
+        this.postFallfunc,      // 004
+        this.pacmanGamefunc,    // 005
+        this.nextState, // skip    006
+        this.nextState, // skip    007
+        this.preJump,           // 008
+        this.jumpgame,          // 009
+        this.winjump,           // 010
+        this.bossscene,         // 011
+    ];
 
     this.run = this.funcarray[this.number];
 }
+
 
 
 var gamestate = new State();
@@ -565,6 +608,15 @@ PIXI.loader
     .add(s004s8)
     .add(s004s9)
     .add(s004s10)
+    .add(s005fl)
+    .add(s005bg)
+    .add(s005pac1)
+    .add(s005pac2)
+    .add(s008s)
+    .add(s009so)
+    .add(s010s1)
+    .add(s010s2)
+    .add(s011boss)
     .load(setup);
 
 function setup(){
