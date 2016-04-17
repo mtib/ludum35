@@ -783,13 +783,11 @@ function State() {
                 self = this
                 this.pacmandata.loop = window.setInterval(()=>{self.pacmandata.logic()}, 20);
                 window.setTimeout(()=>{
-                    this.health *= 0.7 + 0.3 * this.pacmandata.score / (this.pacmandata.num / 2);
-                    if (this.pacmandata.score >= this.pacmandata.num) {
-                        window.clearInterval(this.pacmandata.loop);
-                        d = (self) => {window.setTimeout(self.nextState, 1000)};
-                        d(this);
-                    }
-                }, 15);
+                    self.health *= 0.7 + 0.3 * self.pacmandata.score / (self.pacmandata.num / 2);
+                    window.clearInterval(self.pacmandata.loop)
+                    d = (self) => {window.setTimeout(self.nextState, 1000)};
+                    d(self);
+                }, 8 * 1000);
             }
         },
         // STATE 006 //
