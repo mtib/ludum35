@@ -229,8 +229,9 @@ function Game3Sock() {
 
 function FallingBackground() {
     this.bgs = [PIXI.Sprite.fromImage(s003bg), PIXI.Sprite.fromImage(s003bg)];
+    const H = this.bgs[0].height;
 
-    this.bgs[1].y = this.bgs[0].height;
+    this.bgs[1].y = H;
 
     for (var bg in this.bgs){
         this.bgs[bg].width = WIDTH;
@@ -242,8 +243,12 @@ function FallingBackground() {
         }
     }
     this.update = () => {
-        for (var bg in this.bgs){
-            this.bgs[bg].y -= 3;
+        for (var i in this.bgs){
+            bg = this.bgs[i];
+            bg.y -= 3;
+            if (bg.y < -H){
+                bg.y += 2*H;
+            }
         }
     }
 }
@@ -508,6 +513,8 @@ function State() {
         }
         this.doc.bgs.update()
         this.doc.gamesock.update()
+
+        this.distanceFallen += 3;
     };
 
     this.funcarray = [this.introfunc, this.underTheBed, this.preFallfunc, this.fallgame, this.postFallfunc];
