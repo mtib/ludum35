@@ -250,8 +250,8 @@ function Game1Hand(startpos, follow) {
     this.logic = function() {
         const d = this.delta();
         const di = vectorDist(d, {x:0,y:0});
-        this.sopen.position.x -= d.x/this.friction/di;
-        this.sopen.position.y -= d.y/this.friction/di;
+        this.sopen.position.x -= (d.x/di * 600) / this.friction;
+        this.sopen.position.y -= (d.y/di * 600) / this.friction;
         if (!this.grabbed) {
             this.decideReturn(di);
             if (this.follow) {
@@ -403,7 +403,7 @@ function State() {
                             break;
                     }
                     self.doc[Date.now()] = new Game1Hand(pos);
-                }, 3000);
+                }, 2300);
             };
             this.handSpawner = this.spawnHands(this);
 
