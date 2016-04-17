@@ -73,7 +73,7 @@ const WIDTH = 1280;
 const HEIGHT = 720;
 
 // Current version
-const version = "0.06d"
+const version = "0.08d"
 
 // Initialize Renderer
 var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT, {antialiasing: true, transparent: false, resolution: 1});
@@ -470,7 +470,10 @@ function Game1Hand(startpos, follow) {
             window.clearInterval(gamestate.handSpawner);
             gamestate.doc["gamesock"].die();
             delete gamestate.doc["gamesock"];
-            window.setTimeout(function(){gamestate.nextState()}, 1000);
+            window.setTimeout(()=>{
+                gamestate.health *= gamestate.doc.dt/10;
+                gamestate.nextState()
+            }, 1000);
         }
     }
     this.logic = () => {
@@ -506,7 +509,6 @@ function State() {
     this.score = new PIXI.Text("0", pointsConfig);
     this.score.position = {x: WIDTH - 5, y: 5};
     this.score.anchor = {x: 1, y:0};
-    this.blobsHit;
 
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
     this.infotext.position = abscenter;
@@ -646,12 +648,13 @@ function State() {
                 this.switched = false;
                 this.endgame1 = false;
             }
-            dt = (Date.now() - this.starttime) / 1000.0;
+            this.doc.dt = (Date.now() - this.starttime) / 1000.0;
+
             if (this.doc["gamesock"]){
                 this.doc["gamesock"].move();
             }
-            if (this.doc["points"] && dt <= 15){
-                this.doc["points"].text = Math.floor(dt);
+            if (this.doc["points"] && this.doc.dt <= 15){
+                this.doc["points"].text = Math.floor(this.doc.dt);
             } else if (!this.endgame1) {
                 window.clearInterval(this.handSpawner)
                 this.doc["finalhand"]=new Game1Hand({x:.5*WIDTH,y: -50}, true);
@@ -686,7 +689,8 @@ function State() {
             this.doc.distanceFallen += 0.01;
 
             if(this.doc.distanceFallen>30){
-                this.blobsHit = this.doc.gamesock.blobsHit;
+                blobsHit = this.doc.gamesock.blobsHit;
+                this.health *= this.doc.gamesock.blobsHit == 0 ? 1.5 : Math.pow(0.95, blobsHit);
                 this.nextState();
             }
         },
@@ -807,6 +811,7 @@ function State() {
             this.doc.bgs.update(this.doc.gamesock.dltaHt);
             this.doc.gamesock.update()
             if (this.doc.gamesock.height > 0x28488){
+                this.health *= 2;
                 this.nextState();
             }else if (this.doc.gamesock.height < -2000){
                 this.health /= 2;
