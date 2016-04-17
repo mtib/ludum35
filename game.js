@@ -382,6 +382,11 @@ function State() {
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
     this.infotext.position = {x: WIDTH/2, y: HEIGHT/2};
     this.infotext.anchor = relcenter;
+    this.infotext.warn = (msg) => {
+        this.infotext.text=msg;
+        f=(s)=>{window.setTimeout(function(){s.text=""}, 2000)};
+        f(this.infotext)
+    }
 
     this.doc = {}; // DestroyOnChange
     this.number = 0;
@@ -432,9 +437,7 @@ function State() {
     }
     diasStateGenerator = (backgrounds) => () => {
         if (this.switched){
-            this.infotext.text = "Press <Enter> to proceed";
-            hide = (self) => { window.setTimeout(() => {self.infotext.text = 0}, 3000)};
-            hide(this);
+            this.infotext.warn("Press <Enter> to proceed")
             this.doc["dias"] = 0;
             for (var bg in backgrounds){
                 this.doc[bg] = PIXI.Sprite.fromImage(backgrounds[bg]);
@@ -466,7 +469,13 @@ function State() {
         this.nextState() // TODO impl game
     }
     this.pacmanGamefunc = () => {
-        this.nextState() // TODO impl game
+        if (this.switched) {
+            this.infotext.warn("Use [WASD] to collect fluff");
+            this.doc["background"] = PIXI.Sprite.fromImage(s005bg);
+            cBack.addChild(this.doc["background"]);
+            this.switched = false;
+        }
+
     }
     this.winjump = diasStateGenerator([s010s1, s010s2]);
     this.bossscene = () => {
@@ -475,7 +484,7 @@ function State() {
     this.switched = true;
     this.underTheBed = function(){
         if (this.switched) {
-            this.infotext.text = "[WASD] to move";
+            this.infotext.warn("Use [WASD] to move");
             this.starttime = Date.now();
             this.doc["points"] = this.score;
             this.doc["s001bg"] = PIXI.Sprite.fromImage(s001bg);
@@ -487,10 +496,6 @@ function State() {
             cBack.addChild(this.doc["s001bg"]);
             cGui.addChild(this.doc["points"]);
             this.doc["gamesock"] = new Game1Sock();
-
-            hidetext = function(that){
-                window.setTimeout(function(){that.infotext.text = ""}, 4000);
-            }(this);
 
             this.spawnHands = (self) => window.setInterval(
                 () => {
@@ -648,3 +653,10 @@ PIXI.loader
     .add(s012s2)
     .add(s012s3)
     .load(setup);
+
+// DEBUG STUFF
+jmp = (state) => {
+    for (var i = 0; i < state; i++) {
+        gamestate.nextState();
+    }
+}
