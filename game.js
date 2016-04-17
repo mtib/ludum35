@@ -629,10 +629,10 @@ function State() {
         () => {
             if (this.switched) {
                 this.pacmandata = {};
-                this.pacmandata.down = () => {return sKey.isDown || downArrow.isDown};
-                this.pacmandata.up = () => {return wKey.isDown || upArrow.isDown};
-                this.pacmandata.left = () => {return aKey.isDown || leftArrow.isDown};
-                this.pacmandata.right = () => {return dKey.isDown || rightArrow.isDown};
+                this.pacmandata.down = () => sKey.isDown || downArrow.isDown;
+                this.pacmandata.up = () => wKey.isDown || upArrow.isDown;
+                this.pacmandata.left = () => aKey.isDown || leftArrow.isDown;
+                this.pacmandata.right = () => dKey.isDown || rightArrow.isDown;
                 this.pacmandata.warn = "Use [WASD] to collect fluff";
                 this.infotext.warn(this.pacmandata.warn);
                 this.doc["background"] = PIXI.Sprite.fromImage(s005bg);
