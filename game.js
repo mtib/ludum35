@@ -220,20 +220,23 @@ function Game1Sock() {
 
 function Game3Sock() {
     self = this;
-    const size = 128;
+    const size = 96;
     const speed = 3;
     this.sprite = new PIXI.Sprite.fromImage(ssock);
     this.sprite.anchor = relcenter;
     this.sprite.width = size;
     this.sprite.height = size;
+    const scale = this.sprite.scale.x;
     this.sprite.position = {x: WIDTH*0.5, y: HEIGHT*0.5-150};
 
     this.update = () => {
         xVel = 0;
         if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < WIDTH - 320) {
+            this.sprite.scale.x = -scale;
             xVel += speed;
         }
         if ((leftArrow.isDown || aKey.isDown) && this.sprite.position.x > 320) {
+            this.sprite.scale.x = scale;
             xVel -= speed;
         }
         this.sprite.x += xVel;
