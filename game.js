@@ -55,8 +55,8 @@ STRING OF EVENTS:
 001 - Under the bed game            X
 002 - Story (washing machine)       X
 003 - Sewerfall game                X
-004 - Story (Sockbert)
-005 - Snake game
+004 - Story (Sockbert)              X
+005 - Pacman game                   X
 006 - Story (Explanation)
 007 - Plumbing game
 008 - Story (Break out)
@@ -130,6 +130,19 @@ const s002wm4 = "./scenes/002/waschmaschine4.jpg";
 const s003ek1 = "./scenes/003/eklig1.png";
 const s003ek2 = "./scenes/003/eklig2.png";
 const s003ek3 = "./scenes/003/eklig3.png";
+const s003bg = "./scenes/003/falling.bg.jpg";
+
+// Third Story Slideshow
+const s004s1 = "./scenes/004/sewer1.jpg";
+const s004s2 = "./scenes/004/sewer2.jpg";
+const s004s3 = "./scenes/004/sewer3.jpg";
+const s004s4 = "./scenes/004/sewer4.jpg";
+const s004s5 = "./scenes/004/sewer5.jpg";
+const s004s6 = "./scenes/004/sewer6.jpg";
+const s004s7 = "./scenes/004/sewer7.jpg";
+const s004s8 = "./scenes/004/sewer8.jpg";
+const s004s9 = "./scenes/004/sewer9.jpg";
+const s004s10 = "./scenes/004/sewer10.jpg";
 
 function uritom(name) {
     return ['scenes/'+name+'.ogg','scenes/'+name+'.mp3']
@@ -391,6 +404,7 @@ function State() {
 
     this.introfunc = diasStateGenerator([s000bed1, s000bed2, s000bed3]);
     this.preFallfunc = diasStateGenerator([s002wm1, s002wm2, s002wm3, s002wm4]);
+    this.postFallfunc = diasStateGenerator([s004s1, s004s2, s004s3, s004s4, s004s5, s004s6, s004s7, s004s8, s004s9, s004s10]);
     this.switched = true;
     this.underTheBed = function(){
         if (this.switched) {
@@ -457,7 +471,7 @@ function State() {
         console.log("Hello World")
     };
 
-    this.funcarray = [this.introfunc, this.underTheBed, this.preFallfunc, this.fallgame];
+    this.funcarray = [this.introfunc, this.underTheBed, this.preFallfunc, this.fallgame, this.postFallfunc];
 
     this.run = this.funcarray[this.number];
 }
@@ -494,6 +508,16 @@ PIXI.loader
     .add(s003ek1)
     .add(s003ek2)
     .add(s003ek3)
+    .add(s004s1)
+    .add(s004s2)
+    .add(s004s3)
+    .add(s004s4)
+    .add(s004s5)
+    .add(s004s6)
+    .add(s004s7)
+    .add(s004s8)
+    .add(s004s9)
+    .add(s004s10)
     .load(setup);
 
 function setup(){
