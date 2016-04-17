@@ -173,43 +173,101 @@ function Game1Sock() {
     cMiddle.addChild(this.sprite);
 }
 
-function Game1Hand(position) {
+function vectorDist(d1, d2) {
+    return Math.sqrt(Math.pow(d1.x - d2.x,2) + Math.pow(d1.y -d2.y,2));
+}
+
+function Game1Hand(startpos, follow) {
     this.sopen = new PIXI.Sprite.fromImage(s001armo);
     this.sgrab = new PIXI.Sprite.fromImage(s001armg);
 
-    this.sopen.position = position;
-    this.sopen.anchor = {x: 0.5, y: 1};
-    this.sopen.rotation = Math.atan((this.sopen.position.y - gamestate.playerpos().y)/(this.sopen.position.x -
-    gamestate.playerpos().x))+ 90;
-    this.sopen.scale = {x: .2, y: .2};
+    this.sopen.position = startpos;
+    this.sopen.anchor = {x: 0.5, y: .2};
+    this.sopen.pivot = this.sopen.anchor;
+    this.sopen.scale = {x: .45, y: .45};
+
+    this.follow = follow;
+
+    this.aim = gamestate.playerpos();
+    this.aim = {x: this.aim.x, y: this.aim.y}; // FIXME
+    this.return = false;
+
+    this.friction = 50.0;
+
+    if (this.follow) {
+        this.friction = 20.0;
+    }
+
+    this.correction = -20;
+
+    this.lookatsock = function() {
+        this.sopen.rotation = Math.atan((this.sopen.position.y - this.aim.y)/(this.sopen.position.x - this.aim.x));
+        if (this.sopen.position.x > this.aim.x) {
+            this.sopen.rotation += Math.PI;
+        }
+        this.sopen.rotation += 90 + this.correction / 180 * Math.PI;
+    }
+
+    this.lookatsock();
+
+    this.grabbed = false;
 
     this.grab = function() {
         this.sgrab.position = this.sopen.position;
         this.sgrab.anchor = this.sopen.anchor;
         this.sgrab.scale = this.sopen.scale;
         this.sgrab.rotation = this.sopen.rotation;
+        this.grabbed = true;
+        console.log("grabbed...");
         cFront.removeChild(this.sopen);
         cFront.addChild(this.sgrab);
     }
     this.release = function() {
         // shouldnt be needed...
+        this.die();
     }
     this.delta = function() {
-        ppos = gamestate.playerpos();
-        return {x: this.sopen.position.x - ppos.x, y: this.sopen.position.y - ppos.y};
+        return {x: this.sopen.position.x - this.aim.x, y: this.sopen.position.y - this.aim.y};
+    }
+    this.decideReturn = function(disttoaim) {
+        if ( disttoaim < 20  && !this.return) {
+            this.return = true;
+            this.friction = -40;
+        }
+
+        var dist = vectorDist(gamestate.playerpos(), this.sopen.position);
+        if (dist < 50) {
+            this.grab();
+            cMiddle.removeChild(gamestate.doc["gamesock"].sprite);
+            this.return = true;
+            this.friction = -10;
+            window.clearInterval(gamestate.handSpawner);
+            gamestate.doc["gamesock"].die();
+            delete gamestate.doc["gamesock"];
+            window.setTimeout(function(){gamestate.nextState()}, 1000);
+        }
     }
     this.logic = function() {
-        d = this.delta();
-        this.sopen.position.x += d.x/100.0;
-        this.sopen.position.y += d.y/100.0;
+        const d = this.delta();
+        const di = vectorDist(d, {x:0,y:0});
+        this.sopen.position.x -= (d.x/di * 600) / this.friction;
+        this.sopen.position.y -= (d.y/di * 600) / this.friction;
+        if (!this.grabbed) {
+            this.decideReturn(di);
+            if (this.follow) {
+                this.aim = gamestate.playerpos();
+                this.lookatsock();
+            }
+        }
+        //this.lookatsock();
     }
     this.die = function() {
         cFront.removeChild(this.sopen);
         cFront.removeChild(this.sgrab);
         window.clearInterval(this.move);
-        delete this;
     }
-    this.move = window.setInterval(this.logic, 20);
+    var self = this;
+    this.move = window.setInterval(function(){self.logic()}, 20);
     cFront.addChild(this.sopen);
 }
 
@@ -233,7 +291,10 @@ function State() {
     this.playerpos = function() {
         switch (this.number) {
             case 1:
-                return this.doc["gamesock"].sprite.position;
+                if (this.doc["gamesock"]){
+                    return this.doc["gamesock"].sprite.position;
+                }
+                break;
         }
         return {x: -31415, y:-1337};
     }
@@ -297,7 +358,9 @@ function State() {
             }
         }
     }
+
     this.introfunc = diasStateGenerator([s000bed1, s000bed2, s000bed3]);
+    this.preFallfunc = diasStateGenerator([]);
     this.switched = true;
     this.underTheBed = function(){
         if (this.switched) {
@@ -319,35 +382,47 @@ function State() {
             }(this);
 
             this.spawnHands = function(self) {
-                window.setTimeout(function () {
+                return window.setInterval(function () {
                     orientation = Math.floor(Math.random() * 4.0);
                     rx = WIDTH * Math.random();
                     ry = HEIGHT * Math.random();
                     pos = {};
+                    margin = 100;
                     switch (orientation) {
                         case 0: // top
-                            pos = {x: rx, y: 0};
+                            pos = {x: rx, y: -margin};
                             break;
                         case 1: // right
-                            pos = {x: 0, y: ry};
+                            pos = {x: WIDTH+margin, y: ry};
                             break;
                         case 2: // bottom
-                            pos = {x: rx, y: HEIGHT};
+                            pos = {x: rx, y: HEIGHT+margin};
                             break;
                         case 3: // left
-                            pos = {x: 0, y: ry};
+                            pos = {x: -margin, y: ry};
                             break;
                     }
                     self.doc[Date.now()] = new Game1Hand(pos);
-                }, 1200);
-            }(this);
+                }, 2300);
+            };
+            this.handSpawner = this.spawnHands(this);
 
             this.switched = false;
+            this.endgame1 = false;
         }
-        this.doc["gamesock"].move();
-        this.doc["points"].text = Math.floor((Date.now() - this.starttime) / 1000.0);
+        dt = (Date.now() - this.starttime) / 1000.0;
+        if (this.doc["gamesock"]){
+            this.doc["gamesock"].move();
+        }
+        if (this.doc["points"] && dt <= 15){
+            this.doc["points"].text = Math.floor(dt);
+        } else if (!this.endgame1) {
+            window.clearInterval(this.handSpawner)
+            this.doc["finalhand"]=new Game1Hand({x:.5*WIDTH,y: -50}, true);
+            this.endgame1 = true;
+        }
     }
-    this.funcarray = [this.introfunc, this.underTheBed];
+    this.funcarray = [this.introfunc, this.underTheBed, this.preFallfunc];
 
     this.run = this.funcarray[this.number];
 }
