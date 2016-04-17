@@ -131,14 +131,22 @@ const s003ek1 = "./scenes/003/eklig1.png";
 const s003ek2 = "./scenes/003/eklig2.png";
 const s003ek3 = "./scenes/003/eklig3.png";
 
+const introMusic = new Howl({
+    src: ['scenes/000/SockventureIntro.ogg'],
+    loop: true,
+    volume: 0.4,
+});
+
 const sceneMusic = [ // for the cool kids!
+    introMusic,
     new Howl({
-        src: ['scenes/000/SockventureIntro.ogg'],
+        src: ['scenes/001/SockventureHand.ogg'],
         loop: true,
         volume: 0.4,
     }),
+    introMusic,
     new Howl({
-        src: ['scenes/001/SockventureHand.ogg'],
+        src: ['scenes/003/SockventureSewerFall.ogg'],
         loop: true,
         volume: 0.4,
     })
