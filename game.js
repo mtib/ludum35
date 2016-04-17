@@ -449,6 +449,9 @@ stage.addChild(cFront);
 stage.addChild(cGui);
 
 PIXI.loader
+    .add(s000bed1)
+    .add(s000bed2)
+    .add(s000bed3)
     .add(s001bg)
     .add(s001armg)
     .add(s001armo)
