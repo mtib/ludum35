@@ -807,6 +807,10 @@ function State() {
             this.doc.gamesock.update()
             if (this.doc.gamesock.height > 165000){
                 this.nextState();
+            }else if (this.doc.gamesock.height < -2000){
+                this.health /= 2;
+                this.nextState();
+                this.nextState();
             }
         },
         // STATE 010 //
