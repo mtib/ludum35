@@ -200,6 +200,52 @@ function Game1Sock() {
     cMiddle.addChild(this.sprite);
 }
 
+function Game3Sock() {
+    self = this;
+    const size = 128;
+    const speed = 3;
+    this.sprite = new PIXI.Sprite.fromImage(ssock);
+    this.sprite.anchor = relcenter;
+    this.sprite.width = size;
+    this.sprite.height = size;
+    this.sprite.position = {x: WIDTH*0.5, y: HEIGHT*0.5-150};
+
+    this.update = () => {
+        xVel = 0;
+        if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < WIDTH - 320) {
+            xVel += speed;
+        }
+        if ((leftArrow.isDown || aKey.isDown) && this.sprite.position.x > 320) {
+            xVel -= speed;
+        }
+        this.sprite.x += xVel;
+    };
+
+    this.die = () => cMiddle.removeChild(this.sprite);
+    cMiddle.addChild(this.sprite);
+}
+
+function FallingBackground() {
+    this.bgs = [PIXI.Sprite.fromImage(s003bg), PIXI.Sprite.fromImage(s003bg)];
+
+    this.bgs[1].y = this.bgs[0].height;
+
+    for (var bg in this.bgs){
+        this.bgs[bg].width = WIDTH;
+        cBack.addChild(this.bgs[bg]);
+    }
+    this.die = () => {
+        for (var bg in this.bgs){
+            cBack.removeChild(this.bgs[bg]);
+        }
+    }
+    this.update = () => {
+        for (var bg in this.bgs){
+            this.bgs[bg].y -= 3;
+        }
+    }
+}
+
 function vectorDist(d1, d2) {
     return Math.hypot(d1.x - d2.x, d1.y -d2.y);
 }
@@ -446,7 +492,20 @@ function State() {
     };
 
     this.fallgame = () => {
-        console.log("Hello World")
+        if (this.switched) {
+            this.starttime = Date.now();
+            this.distanceFallen = 0;
+            this.doc.bgs = new FallingBackground();
+            this.doc.ek1 = PIXI.Sprite.fromImage(s003ek1);
+            this.doc.ek2 = PIXI.Sprite.fromImage(s003ek2);
+            this.doc.ek3 = PIXI.Sprite.fromImage(s003ek3);
+
+            this.doc.gamesock = new Game3Sock();
+
+            this.switched = false;
+        }
+        this.doc.bgs.update()
+        this.doc.gamesock.update()
     };
 
     this.funcarray = [this.introfunc, this.underTheBed, this.preFallfunc, this.fallgame, this.postFallfunc];
