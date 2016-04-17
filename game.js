@@ -504,11 +504,15 @@ function State() {
     self = this;
     this.health = 100; // * x | x>1 if successfull | 0<x<1 if failure
     const dbgTxt = "Version: "+version+" /";
+    const hpTxt = " HP";
     this.debugText = new PIXI.Text(dbgTxt+0, debugConfig);
     this.debugText.position = {x:5,y:5};
     this.score = new PIXI.Text("0", pointsConfig);
     this.score.position = {x: WIDTH - 5, y: 5};
     this.score.anchor = {x: 1, y:0};
+    this.hpbox = new PIXI.Text("0"+hpTxt, pointsConfig);
+    this.hpbox.position = {x: WIDTH - 5, y: HEIGHT - 53};
+    this.hpbox.anchor = {x: 1, y:0};
 
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
     this.infotext.position = {x: WIDTH/2, y:HEIGHT/2};
@@ -535,6 +539,7 @@ function State() {
 
     cGui.addChild(this.infotext);
     cGui.addChild(this.debugText);
+    cGui.addChild(this.hpbox);
 
     sceneMusic[0].play();
     this.run = () => console.log("default state");
@@ -569,6 +574,7 @@ function State() {
             console.log("Continuing music!")
 
         this.switched = true;
+        this.hpbox.text = Math.round(this.health) + hpTxt;
         this.debugText.text = dbgTxt + this.number;
         this.run = this.funcarray[this.number];
     }
@@ -826,6 +832,7 @@ function State() {
         // STATE 011 //
         () => {
             if (this.switched) {
+                cGui.removeChild(this.hpbox);
                 this.doc.background = new PIXI.Sprite.fromImage(s012s1);
                 this.doc.background.width = WIDTH;
                 this.doc.background.height = HEIGHT;
