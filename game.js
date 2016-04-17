@@ -283,6 +283,80 @@ function Game3Sock(blobTexes) {
     cMiddle.addChild(this.sprite);
 }
 
+function Game9Sock() {
+    self = this;
+    const size = 96;
+    const speed = 7;
+    this.sprite = new PIXI.Sprite.fromImage(ssock);
+    this.sprite.anchor = relcenter;
+    this.sprite.width = size;
+    this.sprite.height = size;
+    const scale = this.sprite.scale.x;
+    this.sprite.position = {x: WIDTH*0.5, y: HEIGHT*0.5+150};
+
+    this.height = 0;
+    this.dltaHt = 0;
+    this.yVel = 60;
+    this.soaps = [];
+
+    this.soapSpawner = window.setInterval(() => {
+        self.soaps.push(new Soap());
+    }, 600);
+
+    this.update = () => {
+        xVel = 0;
+        if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < WIDTH - 320) {
+            this.sprite.scale.x = -scale;
+            xVel += speed;
+        }
+        if ((leftArrow.isDown || aKey.isDown) && this.sprite.position.x > 320) {
+            this.sprite.scale.x = scale;
+            xVel -= speed;
+        }
+        this.yVel -= 0.5;
+        this.sprite.x += xVel;
+        this.height += this.yVel;
+        this.dltaHt = this.yVel;
+
+        for (var sID in this.soaps) {
+            soap = this.soaps[sID];
+            soap.sprite.y += this.dltaHt;
+            soap.update()
+            if(vectorDist(soap.sprite.position, this.sprite.position) < 76) {
+                this.yVel = Math.max(0, this.yVel);
+                this.yVel += 45;
+                soap.die()
+                delete this.soaps[sID];
+            }
+        }
+    };
+
+    this.die = () => {
+        cMiddle.removeChild(this.sprite)
+        window.clearInterval(this.soapSpawner);
+        for (var s in this.soaps){
+            this.soaps[s].die();
+            delete this.soaps[s];
+        }
+    };
+    cMiddle.addChild(this.sprite);
+}
+
+function Soap(){
+    const size = 64;
+    this.sprite = PIXI.Sprite.fromImage(s009so);
+    this.sprite.anchor = relcenter;
+    this.sprite.width = size;
+    this.sprite.height = size;
+    this.sprite.y = -32;
+    this.sprite.x = Math.random() * (WIDTH - 640) + 320;
+    this.rot = (Math.random()-.5)/ 100.0;
+
+    this.die = () => cFront.removeChild(this.sprite);
+    this.update = () => this.sprite.rotation += this.rot;
+    cFront.addChild(this.sprite);
+}
+
 function Blob(blobs) {
     const size = 64;
     this.sprite = PIXI.Sprite.fromImage(blobs[Math.floor(Math.random() * 3)]);
@@ -318,12 +392,14 @@ function FallingBackground() {
             cBack.removeChild(this.bgs[bg]);
         }
     }
-    this.update = () => {
+    this.update = (speed) => {
         for (var i in this.bgs){
             bg = this.bgs[i];
-            bg.y -= 6;
+            bg.y += speed;
             if (bg.y < -H){
                 bg.y += 2*H;
+            }else if(bg.y > H) {
+                bg.y -= 2*H;
             }
         }
     }
@@ -590,7 +666,6 @@ function State() {
         () => {
             if (this.switched) {
                 this.infotext.warn("Avoid the blobs!");
-                this.starttime = Date.now();
                 this.doc.distanceFallen = 0;
                 this.doc.bgs = new FallingBackground();
                 const blobs = [s003ek1, s003ek2, s003ek3];
@@ -603,7 +678,7 @@ function State() {
                 this.switched = false;
             }
             this.doc.points.text = Math.floor(this.doc.distanceFallen)+"\n"+this.doc.gamesock.blobsHit;
-            this.doc.bgs.update()
+            this.doc.bgs.update(-6)
             this.doc.gamesock.update()
 
             this.doc.distanceFallen += 0.01;
@@ -715,7 +790,24 @@ function State() {
         // STATE 008 //
         diasStateGenerator([s008s]),    // go ahead
         // STATE 009 //
-        () => {},
+        () => {
+            if (this.switched) {
+                this.infotext.warn("Hit the soup to get up");
+                this.doc.points = this.score;
+                this.doc.bgs = new FallingBackground();
+
+                this.doc.gamesock = new Game9Sock();
+
+                cGui.addChild(this.doc.points);
+                this.switched = false;
+            }
+            this.doc.points.text = Math.round(this.doc.gamesock.height/33);
+            this.doc.bgs.update(this.doc.gamesock.dltaHt);
+            this.doc.gamesock.update()
+            if (this.doc.gamesock.height > 165000){
+                this.nextState();
+            }
+        },
         // STATE 010 //
         diasStateGenerator([
             s010s1,             // sock gets grabbed by monster
