@@ -224,7 +224,7 @@ function Game1Sock() {
 function Game3Sock(blobTexes) {
     self = this;
     const size = 96;
-    const speed = 3;
+    const speed = 4;
     this.sprite = new PIXI.Sprite.fromImage(ssock);
     this.sprite.anchor = relcenter;
     this.sprite.width = size;
@@ -285,7 +285,7 @@ function Blob(blobs) {
     this.sprite.x = Math.random() * (WIDTH - 640) + 320;
 
     this.die = () => cFront.removeChild(this.sprite);
-    this.update = () => this.sprite.y -= 3;
+    this.update = () => this.sprite.y -= 6;
     cFront.addChild(this.sprite);
 }
 
@@ -309,7 +309,7 @@ function FallingBackground() {
     this.update = () => {
         for (var i in this.bgs){
             bg = this.bgs[i];
-            bg.y -= 3;
+            bg.y -= 6;
             if (bg.y < -H){
                 bg.y += 2*H;
             }
@@ -593,7 +593,7 @@ function State() {
         // TODO impl ENDING
     }
     this.switched = true;
-    this.underTheBed = function(){
+    this.underTheBed = () => {
         if (this.switched) {
             this.infotext.warn("Use [WASD] to move");
             this.starttime = Date.now();
