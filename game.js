@@ -109,9 +109,12 @@ const wKey = keyboard(87);
 const dKey = keyboard(68);
 const sKey = keyboard(83);
 
+// Images for Intro Diashow
 const s000bed1 = "./scenes/000/bed.pic1.jpg";
 const s000bed2 = "./scenes/000/bed.pic2.jpg";
 const s000bed3 = "./scenes/000/bed.pic3.jpg";
+
+// First Game
 const s001bg = "./scenes/001/background.jpg"; // background for game #1
 const ssock = "./scenes/001/sock.png"; // normal sock, for use in all? scenes
 const s001armo = "./scenes/001/arm.open.png"; // o = open
@@ -436,8 +439,13 @@ function State() {
             this.doc["finalhand"]=new Game1Hand({x:.5*WIDTH,y: -50}, true);
             this.endgame1 = true;
         }
-    }
-    this.funcarray = [this.introfunc, this.underTheBed, this.preFallfunc];
+    };
+    
+    this.fallgame = () => {
+        console.log("Hello World")
+    };
+
+    this.funcarray = [this.introfunc, this.underTheBed, this.preFallfunc, this.fallgame];
 
     this.run = this.funcarray[this.number];
 }
