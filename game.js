@@ -888,6 +888,7 @@ function State() {
                 }
                 self = this;
                 this.fightloop = window.setInterval(()=>{self.fight()},800);
+                this.switched = false;
             }
         },
         // STATE 012 //
