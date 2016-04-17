@@ -829,16 +829,16 @@ function State() {
                     fill: "#FFFFFF",
                     dropShadow: true,
                     dropShadowColor: "#990000",
-                    dropShadowDistance: "1px",
+                    dropShadowDistance: 2,
                     align: "center",
                 };
                 var bossHealth = {
                     font: "70px monospace",
-                    fill: "#990000",
+                    fill: "#FFFFFF",
                     dropShadow: true,
-                    dropShadowColor: "#FFFFFF",
-                    dropShadowDistance: "1px",
-                    align: "center,"
+                    dropShadowColor: "#FF0000",
+                    dropShadowDistance: 2,
+                    align: "center",
                 };
                 this.bossHealth = 500;
                 this.display = {
@@ -849,9 +849,9 @@ function State() {
                 this.doc.d1 = this.display.sock;
                 this.doc.d2 = this.display.boss;
 
-                this.display.sock.position = {x:100, y: 400};
+                this.display.sock.position = {x:100, y: 450};
                 this.display.sock.anchor = relcenter;
-                this.display.boss.position = {x:WIDTH/2, y: 100};
+                this.display.boss.position = {x:WIDTH/2, y: 80};
                 this.display.boss.anchor = relcenter;
                 this.doc.so.position = {x: 100, y:600};
                 this.doc.so.anchor = relcenter;
@@ -880,9 +880,14 @@ function State() {
                     if ( this.bossHealth < 0)  {
                         // you win
                         window.clearInterval(this.fightloop);
+                        this.display.boss.text="DEAD";
+                        self = this;
+                        window.setTimeout(self.nextState,3000);
                     } else if ( this.health < 0 ) {
                         // you lose
                         window.clearInterval(this.fightloop);
+                        this.display.sock.text="DEAD";
+                        this.display.boss.text="TRY AGAIN";
                     }
                     this.yourTurn = !this.yourTurn;
                 }
@@ -895,7 +900,8 @@ function State() {
         diasStateGenerator([s012s1,
             s012s2,             // monster turns into sockbert
             s012s3,             // he says "tanks" // no typo
-            s012s4])
+            s012s4]),
+        // STATE 013 //
     ];
 
     this.run = this.funcarray[this.number];
