@@ -296,9 +296,13 @@ function Blob(blobs) {
     this.sprite.height = size;
     this.sprite.y = HEIGHT+size;
     this.sprite.x = Math.random() * (WIDTH - 640) + 320;
+    this.rot = (Math.random()-.5)/ 100.0;
 
     this.die = () => cFront.removeChild(this.sprite);
-    this.update = () => this.sprite.y -= 6;
+    this.update = () => {
+        this.sprite.y -= 6;
+        this.sprite.rotation += this.rot;
+    }
     cFront.addChild(this.sprite);
 }
 
@@ -425,8 +429,8 @@ function Game1Hand(startpos, follow) {
 
 function State() {
     self = this;
-    const dbgTxt = "Version: "+version+"\n<Debug Information>\nState: ";
-    this.debugText = new PIXI.Text(dbgTxt + 0, debugConfig);
+    const dbgTxt = "Version: "+version+" /";
+    this.debugText = new PIXI.Text(dbgTxt+0, debugConfig);
     this.debugText.position = {x:5,y:5};
     this.score = new PIXI.Text("0", pointsConfig);
     this.score.position = {x: WIDTH - 5, y: 5};
