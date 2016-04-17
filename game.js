@@ -131,8 +131,12 @@ const s003ek1 = "./scenes/003/eklig1.png";
 const s003ek2 = "./scenes/003/eklig2.png";
 const s003ek3 = "./scenes/003/eklig3.png";
 
+function uritom(name) {
+    return ['scenes/'+name+'.ogg','scenes/'+name+'.mp3']
+}
+
 const introMusic = new Howl({
-    src: ['scenes/000/SockventureIntro.ogg'],
+    src: uritom("000/SockventureIntro"),
     loop: true,
     volume: 0.4,
 });
@@ -140,13 +144,13 @@ const introMusic = new Howl({
 const sceneMusic = [ // for the cool kids!
     introMusic,
     new Howl({
-        src: ['scenes/001/SockventureHand.ogg'],
+        src: uritom("001/SockventureHand"),
         loop: true,
         volume: 0.4,
     }),
     introMusic,
     new Howl({
-        src: ['scenes/003/SockventureSewerFall.ogg'],
+        src: uritom("003/SockventureSewerFall"),
         loop: true,
         volume: 0.4,
     })
