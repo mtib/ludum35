@@ -110,7 +110,7 @@ const wKey = keyboard(87);
 const dKey = keyboard(68);
 const sKey = keyboard(83);
 
-resourc = (name) => "./scenes/"+name;
+resourc = function(name) {return "./scenes/"+name;}
 
 // Images for Intro Diashow
 const s000bed1 = resourc("000/bed.pic1.jpg");
@@ -166,11 +166,13 @@ const s012s2 = resourc("012/boss.bg2.jpg");
 const s012s3 = resourc("012/boss.bg3.jpg");
 const s012s4 = resourc("012/boss.bg4.jpg");
 
-newHowl = (name) => new Howl({
-    src: ['scenes/'+name+'.ogg','scenes/'+name+'.mp3'],
-    loop: true,
-    volume: 0.4,
-});
+function newHowl(name) {
+    return new Howl({
+        src: ['scenes/'+name+'.ogg','scenes/'+name+'.mp3'],
+        loop: true,
+        volume: 0.4,
+    }
+)};
 
 const introMusic = newHowl("000/SockventureIntro");
 
@@ -198,8 +200,8 @@ function Game1Sock() {
     this.sprite.width = size;
     this.sprite.height = size;
     this.sprite.position = {x: WIDTH/2,y: HEIGHT/2};
-    this.die = () => cMiddle.removeChild(this.sprite);
-    this.move = () => {
+    this.die = function() {return cMiddle.removeChild(this.sprite);}
+    this.move = function() {
         delta = {x:0, y:0};
         if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < WIDTH - 100) {
             delta.x += speed;
@@ -244,11 +246,11 @@ function Game3Sock(blobTexes) {
 
     this.blobs = [];
 
-    this.blobSpawner = window.setInterval(() => {
+    this.blobSpawner = window.setInterval(function() {
         self.blobs.push(new Blob(blobTexes));
     }, 600);
 
-    this.update = () => {
+    this.update = function() {
         xVel = 0;
         if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < WIDTH - 320) {
             this.sprite.scale.x = -scale;
@@ -273,7 +275,7 @@ function Game3Sock(blobTexes) {
         }
     };
 
-    this.die = () => {
+    this.die = function() {
         cMiddle.removeChild(this.sprite)
         window.clearInterval(this.blobSpawner);
         for (var b in this.blobs){
@@ -300,11 +302,11 @@ function Game9Sock() {
     this.yVel = 60;
     this.soaps = [];
 
-    this.soapSpawner = window.setInterval(() => {
+    this.soapSpawner = window.setInterval(function() {
         self.soaps.push(new Soap());
     }, 600);
 
-    this.update = () => {
+    this.update = function() {
         xVel = 0;
         if ((rightArrow.isDown || dKey.isDown) && this.sprite.position.x < WIDTH - 320) {
             this.sprite.scale.x = -scale;
@@ -332,7 +334,7 @@ function Game9Sock() {
         }
     };
 
-    this.die = () => {
+    this.die = function() {
         cMiddle.removeChild(this.sprite)
         window.clearInterval(this.soapSpawner);
         for (var s in this.soaps){
@@ -353,8 +355,8 @@ function Soap(){
     this.sprite.x = Math.random() * (WIDTH - 640) + 320;
     this.rot = (Math.random()-.5)/ 100.0;
 
-    this.die = () => cFront.removeChild(this.sprite);
-    this.update = () => this.sprite.rotation += this.rot;
+    this.die = function() {return cFront.removeChild(this.sprite);}
+    this.update = function() {return this.sprite.rotation += this.rot;}
     cFront.addChild(this.sprite);
 }
 
@@ -368,8 +370,8 @@ function Blob(blobs) {
     this.sprite.x = Math.random() * (WIDTH - 640) + 320;
     this.rot = (Math.random()-.5)/ 100.0;
 
-    this.die = () => cFront.removeChild(this.sprite);
-    this.update = () => {
+    this.die = function() {return cFront.removeChild(this.sprite);}
+    this.update = function() {
         this.sprite.y -= 6;
         this.sprite.rotation += this.rot;
     }
@@ -388,12 +390,12 @@ function FallingBackground() {
         this.bgs[bg].width = WIDTH;
         cBack.addChild(this.bgs[bg]);
     }
-    this.die = () => {
+    this.die = function() {
         for (var bg in this.bgs){
             cBack.removeChild(this.bgs[bg]);
         }
     }
-    this.update = (speed) => {
+    this.update = function(speed) {
         for (var i in this.bgs){
             bg = this.bgs[i];
             bg.y += speed;
@@ -406,7 +408,7 @@ function FallingBackground() {
     }
 }
 
-vectorDist = (d1, d2) => Math.hypot(d1.x - d2.x, d1.y -d2.y);
+vectorDist = function(d1, d2) {return Math.hypot(d1.x - d2.x, d1.y -d2.y);}
 
 function Game1Hand(startpos, follow) {
     this.sopen = new PIXI.Sprite.fromImage(s001armo);
@@ -431,7 +433,7 @@ function Game1Hand(startpos, follow) {
 
     this.correction = -20;
 
-    this.lookatsock = () => {
+    this.lookatsock = function() {
         this.sopen.rotation = Math.atan((this.sopen.position.y - this.aim.y)/(this.sopen.position.x - this.aim.x));
         if (this.sopen.position.x > this.aim.x) {
             this.sopen.rotation += Math.PI;
@@ -443,7 +445,7 @@ function Game1Hand(startpos, follow) {
 
     this.grabbed = false;
 
-    this.grab = () => {
+    this.grab = function() {
         this.sgrab.position = this.sopen.position;
         this.sgrab.anchor = this.sopen.anchor;
         this.sgrab.scale = this.sopen.scale;
@@ -453,9 +455,9 @@ function Game1Hand(startpos, follow) {
         cFront.addChild(this.sgrab);
     }
     // shouldnt be needed...
-    this.release = () => this.die();
-    this.delta = () => {return {x: this.sopen.position.x - this.aim.x, y: this.sopen.position.y - this.aim.y}};
-    this.decideReturn = (disttoaim) => {
+    this.release = function() {return this.die();}
+    this.delta = function() {return {x: this.sopen.position.x - this.aim.x, y: this.sopen.position.y - this.aim.y}};
+    this.decideReturn = function(disttoaim) {
         if ( disttoaim < 30  && !this.return) {
             this.return = true;
             this.friction = -40;
@@ -470,13 +472,13 @@ function Game1Hand(startpos, follow) {
             window.clearInterval(gamestate.handSpawner);
             gamestate.doc["gamesock"].die();
             delete gamestate.doc["gamesock"];
-            window.setTimeout(()=>{
+            window.setTimeout(function(){
                 gamestate.health *= gamestate.doc.dt/10;
                 gamestate.nextState()
             }, 1000);
         }
     }
-    this.logic = () => {
+    this.logic = function() {
         const d = this.delta();
         const di = vectorDist(d, {x:0,y:0});
         this.sopen.position.x -= (d.x/di * 600) / this.friction;
@@ -490,7 +492,7 @@ function Game1Hand(startpos, follow) {
         }
         //this.lookatsock();
     }
-    this.die = () => {
+    this.die = function() {
         cFront.removeChild(this.sopen);
         cFront.removeChild(this.sgrab);
         window.clearInterval(this.move);
@@ -517,16 +519,16 @@ function State() {
     this.infotext = new PIXI.Text("", infoConfig); // eg. "press xxx to skip"
     this.infotext.position = {x: WIDTH/2, y:HEIGHT/2};
     this.infotext.anchor = relcenter;
-    this.infotext.warn = (msg) => {
-        this.infotext.text=msg;
-        f=(s)=>{window.setTimeout(function(){s.text=""}, 2000)};
-        f(this.infotext)
+    this.infotext.warn = function(msg) {
+        this.text=msg;
+        f=function(s){window.setTimeout(function(){s.text=""}, 2000)};
+        f(this)
     }
 
     this.doc = {}; // DestroyOnChange
     this.number = 0;
 
-    this.playerpos = () => {
+    this.playerpos = function() {
         switch (this.number) {
             case 1:
                 if (this.doc["gamesock"]){
@@ -542,65 +544,66 @@ function State() {
     cGui.addChild(this.hpbox);
 
     sceneMusic[0].play();
-    this.run = () => console.log("default state");
+    this.run = function() {return console.log("default state");}
 
-    this.nextState = () => {
-        for (var sprite in this.doc) {
-            if (this.doc.hasOwnProperty(sprite)) {
-                if (this.doc[sprite].die) {
-                    this.doc[sprite].die();
+    this.nextState = function() {
+        for (var sprite in gamestate.doc) {
+            if (gamestate.doc.hasOwnProperty(sprite)) {
+                if (gamestate.doc[sprite].die) {
+                    gamestate.doc[sprite].die();
                 } else {
-                    cGui.removeChild(this.doc[sprite])
-                    cMiddle.removeChild(this.doc[sprite])
-                    cFront.removeChild(this.doc[sprite])
-                    cBack.removeChild(this.doc[sprite]);
+                    cGui.removeChild(gamestate.doc[sprite])
+                    cMiddle.removeChild(gamestate.doc[sprite])
+                    cFront.removeChild(gamestate.doc[sprite])
+                    cBack.removeChild(gamestate.doc[sprite]);
                 }
             }
-            delete this.doc[sprite];
+            delete gamestate.doc[sprite];
         }
         enterKey.press = undefined;
 
-        this.number++;
-        if (sceneMusic[this.number]) {
+        gamestate.number++;
+        if (sceneMusic[gamestate.number]) {
             // Make sure the music is changed
-            for (var i = this.number-1; i >= 0; i--)
+            for (var i = gamestate.number-1; i >= 0; i--)
                 if(sceneMusic[i]){
                     sceneMusic[i].stop();
                     break;
                 }
 
-            sceneMusic[this.number].play();
+            sceneMusic[gamestate.number].play();
         }else
             console.log("Continuing music!")
 
-        this.switched = true;
-        this.hpbox.text = Math.round(this.health) + hpTxt;
-        this.debugText.text = dbgTxt + this.number;
-        this.run = this.funcarray[this.number];
+        gamestate.switched = true;
+        gamestate.hpbox.text = Math.round(gamestate.health) + hpTxt;
+        gamestate.debugText.text = dbgTxt + gamestate.number;
+        gamestate.run = gamestate.funcarray[gamestate.number];
     }
-    diasStateGenerator = (backgrounds) => () => {
-        if (this.switched){
-            this.infotext.warn("Press <Enter> to proceed")
-            this.doc["dias"] = 0;
-            for (var bg in backgrounds){
-                this.doc[bg] = PIXI.Sprite.fromImage(backgrounds[bg]);
-                this.doc[bg].width  = WIDTH;
-                this.doc[bg].height = HEIGHT;
-            }
-
-            cBack.addChild(this.doc[0]);
-            self = this
-            enterKey.press = () => {
-                if (self.doc["dias"] == backgrounds.length - 1){
-                    self.nextState();
-                    enterKey.press = undefined;
-                }else{
-                    cBack.removeChild(self.doc[self.doc["dias"]++]);
-                    cBack.addChild(self.doc[self.doc["dias"]]);
+    diasStateGenerator = function(backgrounds) {return function() {
+            if (this.switched){
+                this.infotext.warn("Press <Enter> to proceed")
+                this.doc["dias"] = 0;
+                for (var bg in backgrounds){
+                    this.doc[bg] = PIXI.Sprite.fromImage(backgrounds[bg]);
+                    this.doc[bg].width  = WIDTH;
+                    this.doc[bg].height = HEIGHT;
                 }
-            }
 
-            this.switched = false;
+                cBack.addChild(this.doc[0]);
+                self = this
+                enterKey.press = function() {
+                    if (self.doc["dias"] == backgrounds.length - 1){
+                        self.nextState();
+                        enterKey.press = undefined;
+                    }else{
+                        cBack.removeChild(self.doc[self.doc["dias"]++]);
+                        cBack.addChild(self.doc[self.doc["dias"]]);
+                    }
+                }
+
+                this.switched = false;
+            }
         }
     }
     this.switched = true;
@@ -612,7 +615,7 @@ function State() {
             s000bed2,           // human searching sock
             s000bed3]),
         // STATE 001 //
-        () => {
+        function() {
             if (this.switched) {
                 this.infotext.warn("Use [WASD] to move");
                 this.starttime = Date.now();
@@ -625,30 +628,32 @@ function State() {
                 cBack.addChild(this.doc["s001bg"]);
                 cGui.addChild(this.doc["points"]);
                 this.doc["gamesock"] = new Game1Sock();
-                this.spawnHands = (self) => window.setInterval(
-                    () => {
-                        orientation = Math.floor(Math.random() * 4.0);
-                        rx = WIDTH * Math.random();
-                        ry = HEIGHT * Math.random();
-                        pos = {};
-                        margin = 100;
-                        switch (orientation) {
-                            case 0: // top
-                                pos = {x: rx, y: -margin};
-                                break;
-                            case 1: // right
-                                pos = {x: WIDTH+margin, y: ry};
-                                break;
-                            case 2: // bottom
-                                pos = {x: rx, y: HEIGHT+margin};
-                                break;
-                            case 3: // left
-                                pos = {x: -margin, y: ry};
-                                break;
-                        }
-                        self.doc[Date.now()] = new Game1Hand(pos);
-                    },
-                1500);
+                this.spawnHands = function(self) {
+                    return window.setInterval(
+                        function() {
+                            orientation = Math.floor(Math.random() * 4.0);
+                            rx = WIDTH * Math.random();
+                            ry = HEIGHT * Math.random();
+                            pos = {};
+                            margin = 100;
+                            switch (orientation) {
+                                case 0: // top
+                                    pos = {x: rx, y: -margin};
+                                    break;
+                                case 1: // right
+                                    pos = {x: WIDTH+margin, y: ry};
+                                    break;
+                                case 2: // bottom
+                                    pos = {x: rx, y: HEIGHT+margin};
+                                    break;
+                                case 3: // left
+                                    pos = {x: -margin, y: ry};
+                                    break;
+                            }
+                            self.doc[Date.now()] = new Game1Hand(pos);
+                        },
+                    1500);
+                }
                 this.handSpawner = this.spawnHands(this);
 
                 this.switched = false;
@@ -674,7 +679,7 @@ function State() {
             s002wm3,
             s002wm4]),
         // STATE 003 //
-        () => {
+        function() {
             if (this.switched) {
                 this.infotext.warn("Avoid the blobs!");
                 this.doc.distanceFallen = 0;
@@ -696,7 +701,7 @@ function State() {
 
             if(this.doc.distanceFallen>30){
                 blobsHit = this.doc.gamesock.blobsHit;
-                this.health *= this.doc.gamesock.blobsHit == 0 ? 1.5 : Math.pow(0.95, blobsHit);
+                this.health *= this.doc.gamesock.blobsHit == 0 ? 1.5 : 1.3*Math.pow(0.95, blobsHit);
                 this.nextState();
             }
         },
@@ -713,13 +718,13 @@ function State() {
             s004s9,
             s004s10]),
         // STATE 005 //
-        () => {
+        function() {
             if (this.switched) {
                 this.pacmandata = {};
-                this.pacmandata.down = () => sKey.isDown || downArrow.isDown;
-                this.pacmandata.up = () => wKey.isDown || upArrow.isDown;
-                this.pacmandata.left = () => aKey.isDown || leftArrow.isDown;
-                this.pacmandata.right = () => dKey.isDown || rightArrow.isDown;
+                this.pacmandata.down = function() {return sKey.isDown || downArrow.isDown;}
+                this.pacmandata.up = function() {return wKey.isDown || upArrow.isDown;}
+                this.pacmandata.left = function() {return aKey.isDown || leftArrow.isDown;}
+                this.pacmandata.right = function() {return dKey.isDown || rightArrow.isDown;}
                 this.pacmandata.warn = "Use [WASD] to collect fluff";
                 this.infotext.warn(this.pacmandata.warn);
                 this.doc["background"] = PIXI.Sprite.fromImage(s005bg);
@@ -759,39 +764,39 @@ function State() {
                 for (var i = 0; i < this.pacmandata.fluff.length; i++) {
                     cMiddle.addChild(this.pacmandata.fluff[i]);
                 }
-                this.pacmandata.logic = () => {
-                    if (this.pacmandata.down())  this.pacmandata.pos.y += this.pacmandata.speed;
-                    if (this.pacmandata.up())    this.pacmandata.pos.y -= this.pacmandata.speed;
-                    if (this.pacmandata.left())  {
-                        this.pacmandata.pos.x -= this.pacmandata.speed;
-                        this.pacmandata.sprite.scale.x = this.pacmandata.defscale.x
+                this.pacmandata.logic = function() {
+                    if (this.down())  this.pos.y += this.speed;
+                    if (this.up())    this.pos.y -= this.speed;
+                    if (this.left())  {
+                        this.pos.x -= this.speed;
+                        this.sprite.scale.x = this.defscale.x
                     };
-                    if (this.pacmandata.right()) {
-                        this.pacmandata.pos.x += this.pacmandata.speed;
-                        this.pacmandata.sprite.scale.x = -this.pacmandata.defscale.x
+                    if (this.right()) {
+                        this.pos.x += this.speed;
+                        this.sprite.scale.x = -this.defscale.x
                     };
-                    this.pacmandata.sprite.position = this.pacmandata.pos;
-                    for (var i = 0; i < this.pacmandata.fluff.length; i++) {
-                        if (this.pacmandata.fluff[i]){
-                            this.pacmandata.fluff[i].rotation += Math.random();
-                            if(vectorDist(this.pacmandata.fluff[i].position, this.pacmandata.pos) < 60) {
-                                cMiddle.removeChild(this.pacmandata.fluff[i])
-                                this.pacmandata.fluff[i]=undefined;
-                                this.pacmandata.score += 1;
+                    this.sprite.position = this.pos;
+                    for (var i = 0; i < this.fluff.length; i++) {
+                        if (this.fluff[i]){
+                            this.fluff[i].rotation += Math.random();
+                            if(vectorDist(this.fluff[i].position, this.pos) < 60) {
+                                cMiddle.removeChild(this.fluff[i])
+                                this.fluff[i]=undefined;
+                                this.score += 1;
                             }
                         }
                     }
-                    this.score.text = this.pacmandata.score;
-                    this.score.style.fill = "#FFFFFF";
-                    this.doc["score"] = this.score;
-                    cGui.addChild(this.score);
+                    gamestate.score.text = this.score;
+                    gamestate.score.style.fill = "#FFFFFF";
+                    gamestate.doc["score"] = this.score;
+                    cGui.addChild(gamestate.score);
                 }
                 self = this
-                this.pacmandata.loop = window.setInterval(()=>{self.pacmandata.logic()}, 20);
-                window.setTimeout(()=>{
+                this.pacmandata.loop = window.setInterval(function(){self.pacmandata.logic()}, 20);
+                window.setTimeout(function() {
                     self.health *= 0.7 + 0.3 * self.pacmandata.score / (self.pacmandata.num / 2);
                     window.clearInterval(self.pacmandata.loop)
-                    d = (self) => {window.setTimeout(self.nextState, 1000)};
+                    d = function(self) {window.setTimeout(self.nextState, 1000)};
                     d(self);
                 }, 8 * 1000);
             }
@@ -803,7 +808,7 @@ function State() {
         // STATE 008 //
         diasStateGenerator([s008s]),    // go ahead
         // STATE 009 //
-        () => {
+        function() {
             if (this.switched) {
                 this.infotext.warn("Hit the soup to get up");
                 this.doc.points = this.score;
@@ -831,7 +836,7 @@ function State() {
             s010s1,             // sock gets grabbed by monster
             s010s2]),
         // STATE 011 //
-        () => {
+        function() {
             if (this.switched) {
                 cGui.removeChild(this.hpbox);
                 this.doc.background = new PIXI.Sprite.fromImage(s012s1);
@@ -856,8 +861,8 @@ function State() {
                 };
                 this.bossHealth = 500;
                 this.display = {
-                    sock: new PIXI.Text(this.health, ownHealth),
-                    boss: new PIXI.Text(this.bossHealth, bossHealth)
+                    sock: new PIXI.Text(Math.floor(this.health), ownHealth),
+                    boss: new PIXI.Text(Math.floor(this.bossHealth), bossHealth)
                 }
                 this.doc.so = new PIXI.Sprite.fromImage(ssock);
                 this.doc.d1 = this.display.sock;
@@ -877,15 +882,15 @@ function State() {
 
                 this.time = Date.now()
                 this.yourTurn = true;
-                this.updateText = () => {
+                this.updateText = function() {
                     this.display.sock.text = Math.floor(this.health);
                     this.display.boss.text = Math.floor(this.bossHealth);
                 }
-                this.sockAttack = () => {this.bossHealth -= Math.random() * 60 + 20;   this.updateText()};
-                this.bossAttack = () => {this.health -= Math.random() * 20 + 30;       this.updateText()};
+                this.sockAttack = function() {this.bossHealth -= Math.random() * 60 + 20;   this.updateText()};
+                this.bossAttack = function() {this.health -= Math.random() * 20 + 30;       this.updateText()};
 
                 // Fighting
-                this.fight = () => {
+                this.fight = function() {
                     if (this.yourTurn) {
                         this.sockAttack();
                     } else {
@@ -906,7 +911,7 @@ function State() {
                     this.yourTurn = !this.yourTurn;
                 }
                 self = this;
-                this.fightloop = window.setInterval(()=>{self.fight()},800);
+                this.fightloop = window.setInterval(function() {self.fight()},800);
                 this.switched = false;
             }
         },
@@ -916,7 +921,7 @@ function State() {
             s012s3,             // he says "tanks" // no typo
             s012s4]),
         // STATE 013 //
-        () => {
+        function() {
             if (this.switched){
                 this.switched = false;
                 var msg = new PIXI.Text("Thanks for Playing!", {
@@ -1011,7 +1016,7 @@ PIXI.loader
     .load(setup);
 
 // DEBUG STUFF
-jmp = (state) => {
+jmp = function(state) {
     for (var i = 0; i < state; i++) {
         gamestate.nextState();
     }
